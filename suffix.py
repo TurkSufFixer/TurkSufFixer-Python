@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 import turkish
 import io
-import logging
 
 
 class Suffix:
@@ -21,7 +20,6 @@ class Suffix:
 
     def __init__(self, dictionary="sozluk/isim.itu", exceptions="sozluk/istisna.itu", poss="sozluk/ihali.itu"):
         # TODO: safdece possfile yi açık tut diğerlerini kapat çünkü güncellemeyeceksin
-        # TODO: io.open öneriliyormuş
         self.dictfile   = io.open(dictionary,'r+',encoding='utf-8')
         self.exceptfile = io.open(exceptions,"r+",encoding='utf-8')
         self.possfile   = io.open(poss,"r+",encoding='utf-8')
@@ -49,6 +47,7 @@ class Suffix:
         return u'sıfır'
 
     def _divideWord(self,name):
+        # TODO: üçe bölmeyi yap
         result = [[name]] if name in self.dictionary else []
         for i in range(2, len(name)-1): #ikiden başlıyoruz çünkü tek harfli kelime yok varsayıyoruz
             if name[:i] in self.dictionary and name[i:] in self.dictionary:
@@ -66,6 +65,7 @@ class Suffix:
         firstVowelofSuffix = [letter for letter in suffix if letter in self.vowels][0]
         return ((lastVowelOfName in self.frontvowels) or isFrontVowel) == (firstVowelofSuffix in self.frontvowels)
     def _surfacetolex(self, suffix):
+        #TODO: gereksiz yere yavaş çalışıyor düzelt
         suffix = list(suffix)
         for i,letter in enumerate(suffix):
             if letter in ['a','e']:
