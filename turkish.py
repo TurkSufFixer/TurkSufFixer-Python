@@ -5,8 +5,8 @@
 # Letters with circumflex will fail if you use this table
 # All letters with circumflex (şapkalı) will translated to 'e'
 
-lcase_table = u'abcçdefgğhıijklmnoöprsştuüvyz' + u'eeeeee\xC2\xE2\xDB\xFB\xD4\xF4'
-ucase_table = u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ' + u'\xC2\xE2\xDB\xFB\xD4\xF4EEEEEE'
+lcase_table = u'abcçdefgğhıijklmnoöprsştuüvyz' + u'eeüüöö\xC2\xE2\xDB\xFB\xD4\xF4'
+ucase_table = u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ' + u'\xC2\xE2\xDB\xFB\xD4\xF4EEÜÜÖÖ'
 
 #print u'\xC2\xE2\xDB\xFB\xD4\xF4'.encode('UTF-8')
 
@@ -30,7 +30,7 @@ def _turkishtoupper(char):
         return char
 def test():
     names = [u'böğürtlen', u'BÖĞÜRTLEN', u'bÖğÜrTlen', u'çimşir', u'ÇiMŞiR', u'ÇİMŞİR'
-             ,u'ılık', u'ILIK', u"İstanbul", u'kem\xE2l']
+             ,u'ılık', u'ILIK', u"İstanbul", u'kem\xE2l', u'alk\xF4l']
     for name in names:
         print lower(name).encode('utf-8')
         print upper(name).encode('utf-8')
