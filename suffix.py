@@ -44,14 +44,27 @@ class Suffix:
                          15 if 15 < i      else
                          i)
                     return self.digits[i]
+
         return u'sıfır'
 
-    def _divideWord(self,name):
+    def _divideWord(self,name, suffix=''):
         # TODO: üçe bölmeyi yap
-        result = [[name]] if name in self.dictionary else []
+        name = name[:-len(suffix)] if len(suffix) > 0 else name
+        result = []
+        if name in self.dictionary or \
+           ((name.endswith(u'ğ') or name.endswith(u'g')) and
+            (name[:-1] + 'k') in self.dictionary):
+            result.append([name])
+
         for i in range(2, len(name)-1): #ikiden başlıyoruz çünkü tek harfli kelime yok varsayıyoruz
-            if name[:i] in self.dictionary and name[i:] in self.dictionary:
-                result.append([name[:i],name[i:]])
+            firstWord = name[:i]; secondWord = name[i:]
+            #print firstWord.encode('utf8'), secondWord.encode('utf8')
+            if firstWord in self.dictionary:
+                if secondWord in self.dictionary:
+                     result.append([firstWord,secondWord])
+                elif suffix == 'H' and (secondWord.endswith(u'ğ') or secondWord.endswith(u'g')) and \
+                     (secondWord[:-1] + 'k') in self.dictionary:
+                     result.append([firstWord,secondWord])
         return result
     def _checkvowelharmony(self, name, suffix):
         # TODO: doğruluğunu kontrol et
@@ -76,24 +89,18 @@ class Suffix:
     def _checkCompoundNoun(self, name):
         probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1)}
         possessivesuff = ['lArH','H','yH','sH']
+        #return any(self._checkvowelharmony(result[-1], probablesuff[posssuff]) for posssuff in possessivesuff if posssuff in probablesuff.keys()
+        #                                                                       for result in self._divideWord(name,posssuff))
         for posssuff in [x for x in possessivesuff if x in probablesuff.keys()]: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
-            possiblename = name[:-len(posssuff)]
-            candidatenouns = [possiblename] # trim the suffix part of noun
-            if posssuff == 'H':
-                if possiblename.endswith(u'ğ') or possiblename.endswith(u'g'):
-                    candidatenouns.append(possiblename[:-1] + 'k')
-                else:
-                    pass # TODO: ağzı gibi ünlü düşmeleri yapılacak
-
-            for candidatenoun in candidatenouns:
-                results = self._divideWord(candidatenoun) # [["gümüş,"su"]] olarak dönecek
-                for result in results:
-                    if self._checkvowelharmony(result[-1], probablesuff[posssuff]): #if it is not empty
-                        # TODO: kelimeyi i hali sözlüğüne ekle flag i true yap yazarken codeclerde \n sorunu falan var
-                        return True
+            results = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
+            for result in results:
+                if self._checkvowelharmony(result[-1], probablesuff[posssuff]): #if it is not empty
+                    # TODO: kelimeyi i hali sözlüğüne ekle flag i true yap yazarken codeclerde \n sorunu falan var
+                    return True
         return False
     def _checkExceptionalWord(self, name):
-        return any(words[-1] in self.exceptions for words in self._divideWord(name))
+        return any(word[-1] in self.exceptions for word in self._divideWord(name)
+                                               if  word[-1] != '')
         #check if second word is in exception lists
     def addSuffix(self, name, suffix):
         if len(name) == 0:
@@ -114,7 +121,6 @@ class Suffix:
         elif name in self.exceptions or  \
             (name not in self.dictionary and self._checkExceptionalWord(name)):
             soft = True
-
         lastVowel = [letter for letter in reversed(name) if letter in self.vowels][0]
         if suffix[-1] == 'H':
             replacement = ( u'ü' if lastVowel in self.frontrounded   or (soft and lastVowel in self.backrounded)   else
