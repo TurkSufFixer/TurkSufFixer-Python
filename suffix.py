@@ -104,7 +104,7 @@ class Suffix:
             raise NotInSuffixes
 
         soft = False
-        name = turkish.lower(name.split(' ')[-1])
+        name = turkish.lower(name.strip().split(' ')[-1])
         # TODO: iki kere bölme yapıyoruz bunu düzelt
         if (name[-1] in self.H and name not in self.dictionary and
            (name in self.possessive or self._checkCompoundNoun(name))):
@@ -164,29 +164,3 @@ def test():
 
 if __name__ == "__main__":
     test()
-
-"""
-harf
-santral
-kemal
-nihal
-kalp
-hayal
-mahal
-hal
-meşgul
-şimal
-nazgul - anlamını bilmiyorum
-ihtimal
-suistimal
-suikast
-
---------------------
-hariçler direk kökler sözlüğüne eklenecek
-inönü
-adem elma 'sı ndayım sayılmaz'
-------------------------------
-kelimeyi sadece ikiye bölüp birleşik olup olmadığına bakıyoruz
----------------
-ki eki sayılacak mı? kelime ki ile bitiyorsa yine  n ile başlayan ekler gerekli
-"""
