@@ -50,6 +50,7 @@ class Suffix:
 
     def _divideWord(self,name, suffix=''):
         # TODO: üçe bölmeyi yap
+        realsuffix = name[-len(suffix):]
         name = name[:-len(suffix)] if len(suffix) > 0 else name
         result = []
         if name in self.dictionary or \
@@ -66,7 +67,14 @@ class Suffix:
                 elif suffix == 'H' and (secondWord.endswith(u'ğ') or secondWord.endswith(u'g')) and \
                      (secondWord[:-1] + 'k') in self.dictionary:
                      result.append([firstWord,secondWord])
+                elif suffix == 'H':
+                    secondWord = self._checkEllipsisAffix(secondWord,realsuffix)
+                    if secondWord != "": result.append([firstWord,secondWord])
         return result
+    def _checkEllipsisAffix(self, name, suffix):
+        name = (name[:-1] + suffix + name[-1])
+        return name if name in self.haplology else ""
+
     def _checkvowelharmony(self, name, suffix):
         # TODO: doğruluğunu kontrol et
         lastVowelOfName = ''
@@ -143,7 +151,7 @@ class Suffix:
         # and finally add buffer letter, if we added n buffer letter before this code will discarded
         if name[-1] in self.vowels and suffix[0] in self.vowels:
             suffix = 'y' + suffix
-            
+
         return suffix
 
     def __del__(self):
