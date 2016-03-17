@@ -62,12 +62,13 @@ class Suffix:
             if firstWord in self.dictionary:
                 if secondWord in self.dictionary or self._checkConsonantHarmony(secondWord,suffix):
                      result.append([firstWord,secondWord])
-                elif suffix == 'H':
+                else:
                     secondWord = self._checkEllipsisAffix(secondWord,realsuffix)
                     if secondWord != "": result.append([firstWord,secondWord])
         return result
-    def _checkEllipsisAffix(self, name, suffix):
-        name = (name[:-1] + suffix + name[-1])
+    def _checkEllipsisAffix(self, name, realsuffix):
+        if realsuffix not in ['i','u',u'ı',u'ü']: return ""
+        name = (name[:-1] + realsuffix + name[-1])
         return name if name in self.haplology else ""
     def _checkConsonantHarmony(self, name, suffix):
         return suffix == 'H' and (((name.endswith(u'ğ') or name.endswith(u'g')) and (name[:-1] + 'k') in self.dictionary) or
