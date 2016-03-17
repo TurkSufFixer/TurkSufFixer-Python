@@ -71,7 +71,6 @@ class Suffix:
         name = (name[:-1] + realsuffix + name[-1])
         return name if name in self.haplology else ""
     def _checkConsonantHarmony(self, name, suffix):
-        print name.encode('utf8'),suffix.encode('utf8')
         return suffix == 'H' and (((name.endswith(u'ğ') or name.endswith(u'g')) and (name[:-1] + 'k') in self.dictionary) or
                                   ( name.endswith(u'b') and (name[:-1] + 'p') in self.dictionary) or
                                   ( name.endswith(u'c') and (name[:-1] + 'ç') in self.dictionary) or
