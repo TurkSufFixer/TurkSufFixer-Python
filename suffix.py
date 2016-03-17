@@ -24,10 +24,9 @@ class Suffix:
         with io.open(dictpath,  "r+",encoding='utf-8') as dictfile,  \
              io.open(exceptions,"r+",encoding='utf-8') as exceptfile, \
              io.open(haplopath, "r+",encoding='utf-8') as haplofile:
-
-            self.exceptions = set(exceptfile.read().split('\n'))
-            self.haplology  = set(haplofile.read().split('\n'))
-            self.dictionary = set(dictfile.read().split('\n')) | self.exceptions | self.haplology
+                 self.exceptions = set(exceptfile.read().split('\n'))
+                 self.haplology  = set(haplofile.read().split('\n'))
+                 self.dictionary = set(dictfile.read().split('\n')) | self.exceptions | self.haplology
 
     def _readNumber(self, number):
         if len(number) == 1 and number[-1] == '0': return u'sıfır'
@@ -60,6 +59,7 @@ class Suffix:
             firstWord = name[:i]; secondWord = name[i:]
             #print firstWord.encode('utf8'), secondWord.encode('utf8')
             if firstWord in self.dictionary:
+                #check whether second word in dictionary or affected by consonant harmony rule
                 if secondWord in self.dictionary or self._checkConsonantHarmony(secondWord,suffix):
                      result.append([firstWord,secondWord])
                 else:
@@ -71,6 +71,7 @@ class Suffix:
         name = (name[:-1] + realsuffix + name[-1])
         return name if name in self.haplology else ""
     def _checkConsonantHarmony(self, name, suffix):
+        print name.encode('utf8'),suffix.encode('utf8')
         return suffix == 'H' and (((name.endswith(u'ğ') or name.endswith(u'g')) and (name[:-1] + 'k') in self.dictionary) or
                                   ( name.endswith(u'b') and (name[:-1] + 'p') in self.dictionary) or
                                   ( name.endswith(u'c') and (name[:-1] + 'ç') in self.dictionary) or
@@ -84,7 +85,6 @@ class Suffix:
             isFrontVowel = True
         else:
             lastVowelOfName = [letter for letter in reversed(name) if letter in self.vowels][0]
-
         firstVowelofSuffix = [letter for letter in suffix if letter in self.vowels][0]
         return ((lastVowelOfName in self.frontvowels) or isFrontVowel) == (firstVowelofSuffix in self.frontvowels)
     def _surfacetolex(self, suffix):
