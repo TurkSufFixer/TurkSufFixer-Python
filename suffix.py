@@ -74,7 +74,7 @@ class Suffix:
     def _checkConsonantHarmony(self, name):
         return ((name.endswith(u'ğ') or name.endswith(u'g'))
                  and (name[:-1] + 'k') in self.dictionary)
-    def _checkvowelharmony(self, name, suffix):
+    def _checkVowelHarmony(self, name, suffix):
         # TODO: doğruluğunu kontrol et
         lastVowelOfName = ''
         isFrontVowel = False
@@ -102,7 +102,7 @@ class Suffix:
         for posssuff in [x for x in possessivesuff if x in probablesuff.keys()]: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
             results = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
             for result in results:
-                if self._checkvowelharmony(result[-1], probablesuff[posssuff]): #if it is not empty
+                if self._checkVowelHarmony(result[-1], probablesuff[posssuff]): #if it is not empty
                     # TODO: kelimeyi i hali sözlüğüne ekle flag i true yap yazarken codeclerde \n sorunu falan var
                     return True
         return False
