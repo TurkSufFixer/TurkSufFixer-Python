@@ -53,16 +53,14 @@ class Suffix:
         realsuffix = name[-len(suffix):]
         name = name[:-len(suffix)] if len(suffix) > 0 else name
         result = []
-        if name in self.dictionary or \
-           (suffix == 'H' and self._checkConsonantHarmony(name)):
+        if name in self.dictionary or self._checkConsonantHarmony(name,suffix):
             result.append([name])
 
         for i in range(2, len(name)-1): #ikiden başlıyoruz çünkü tek harfli kelime yok varsayıyoruz
             firstWord = name[:i]; secondWord = name[i:]
             #print firstWord.encode('utf8'), secondWord.encode('utf8')
             if firstWord in self.dictionary:
-                if secondWord in self.dictionary or \
-                   (suffix == 'H' and self._checkConsonantHarmony(secondWord)):
+                if secondWord in self.dictionary or self._checkConsonantHarmony(secondWord,suffix):
                      result.append([firstWord,secondWord])
                 elif suffix == 'H':
                     secondWord = self._checkEllipsisAffix(secondWord,realsuffix)
@@ -71,9 +69,12 @@ class Suffix:
     def _checkEllipsisAffix(self, name, suffix):
         name = (name[:-1] + suffix + name[-1])
         return name if name in self.haplology else ""
-    def _checkConsonantHarmony(self, name):
-        return ((name.endswith(u'ğ') or name.endswith(u'g'))
-                 and (name[:-1] + 'k') in self.dictionary)
+    def _checkConsonantHarmony(self, name, suffix):
+        return suffix == 'H' and (((name.endswith(u'ğ') or name.endswith(u'g')) and (name[:-1] + 'k') in self.dictionary) or
+                                  ( name.endswith(u'b') and (name[:-1] + 'p') in self.dictionary) or
+                                  ( name.endswith(u'c') and (name[:-1] + 'ç') in self.dictionary) or
+                                    name.endswith(u'd') and (name[:-1] + 't') in self.dictionary)
+
     def _checkVowelHarmony(self, name, suffix):
         # TODO: doğruluğunu kontrol et
         lastVowelOfName = ''
