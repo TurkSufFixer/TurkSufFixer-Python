@@ -67,7 +67,7 @@ class Suffix:
                     if secondWord != "": result.append([firstWord,secondWord])
         return result
     def _checkEllipsisAffix(self, name, realsuffix):
-        if realsuffix not in ['i','u',u'ı',u'ü']: return ""
+        if realsuffix not in self.H: return ""
         name = (name[:-1] + realsuffix + name[-1])
         return name if name in self.haplology else ""
     def _checkConsonantHarmony(self, name, suffix):
