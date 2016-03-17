@@ -18,15 +18,17 @@ class Suffix:
     tens =    {'1':u'on','2':u'yirmi','3':u'otuz','4':u'kırk','5':u'elli','6':u'altmış','7':u'yetmiş','8':u'seksen','9':u'doksan'}
     digits =  {2:u'yüz',3:u'bin',6:u'milyon', 9:u'milyar',12:u'trilyon',15:u'katrilyon'}
 
-    def __init__(self, dictionary="sozluk/isim.itu", exceptions="sozluk/istisna.itu", poss="sozluk/ihali.itu"):
+    def __init__(self, dictionary="sozluk/isim.itu", exceptions="sozluk/istisna.itu", haplo="sozluk/unludus.itu", poss="sozluk/ihali.itu"):
         # TODO: safdece possfile yi açık tut diğerlerini kapat çünkü güncellemeyeceksin
-        self.dictfile   = io.open(dictionary,'r+',encoding='utf-8')
+        self.dictfile   = io.open(dictionary,"r+",encoding='utf-8')
         self.exceptfile = io.open(exceptions,"r+",encoding='utf-8')
-        self.possfile   = io.open(poss,"r+",encoding='utf-8')
-        # TODO: hep küçük harfli olarak eklenecek sözlüğe
+        self.possfile   = io.open(poss,      "r+",encoding='utf-8')
+        self.haplofile  = io.open(haplo,     "r+",encoding='utf-8')
+
         self.exceptions = set(self.exceptfile.read().split('\n'))
         self.possessive = set(self.possfile.read().split('\n'))
-        self.dictionary = set(self.dictfile.read().split('\n')) | self.exceptions
+        self.haplology  = set(self.haplofile.read().split('\n'))
+        self.dictionary = set(self.dictfile.read().split('\n')) | self.exceptions | self.haplology
 
     def _readNumber(self, number):
         if len(number) == 1 and number[-1] == '0': return u'sıfır'
@@ -149,6 +151,7 @@ class Suffix:
         self.dictfile.close()
         self.exceptfile.close()
         self.possfile.close()
+        self.haplofile.close()
 
 class NotInSuffixes(Exception):
     pass
