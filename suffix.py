@@ -71,10 +71,9 @@ class Suffix:
         name = (name[:-1] + realsuffix + name[-1])
         return name if name in self.haplology else ""
     def _checkConsonantHarmony(self, name, suffix):
-        return suffix == 'H' and (((name.endswith(u'ğ') or name.endswith(u'g')) and (name[:-1] + 'k') in self.dictionary) or
-                                  ( name.endswith(u'b') and (name[:-1] + 'p') in self.dictionary) or
-                                  ( name.endswith(u'c') and (name[:-1] + 'ç') in self.dictionary) or
-                                    name.endswith(u'd') and (name[:-1] + 't') in self.dictionary)
+        """ Checks consonant harmony rule """
+        return suffix == 'H' and any(name.endswith(lastletter) and (name[:-1] + replacement) in self.dictionary
+                                     for lastletter,replacement in [(u'ğ',u'k'),(u'g',u'k'),(u'b',u'p'),(u'c',u'ç'),(u'd',u't')])
 
     def _checkVowelHarmony(self, name, suffix):
         # TODO: doğruluğunu kontrol et
@@ -108,9 +107,9 @@ class Suffix:
                     return True
         return False
     def _checkExceptionalWord(self, name):
+        """check if second word is in exception lists"""
         return any(word[-1] in self.exceptions for word in self._divideWord(name)
                                                if  word[-1] != '')
-        #check if second word is in exception lists
     def addSuffix(self, name, suffix):
         if len(name) == 0:
             raise NotValidString
