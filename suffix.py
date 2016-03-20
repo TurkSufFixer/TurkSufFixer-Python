@@ -28,22 +28,22 @@ class Suffix:
                  self.dictionary = set(dictfile.read().split('\n')) | self.exceptions | self.haplology
 
     def _readNumber(self, number):
+        """ Reads number and returns last word of it"""
         if len(number) == 1 and number[-1] == '0': return u'sıfır'
-        for i, letter in enumerate(reversed(number)):
-            if letter != u'0':
-                if i == 0:
-                    return self.numbers[letter]
-                if i == 1:
-                    return self.tens[letter]
-                else:
-                    i = (3  if 3  < i < 6  else
-                         6  if 6  < i < 9  else
-                         9  if 9  < i < 12 else
-                         12 if 12 < i < 15 else
-                         15 if 15 < i      else
-                         i)
-                    return self.digits[i]
-
+        for i, letter in [(i,letter) for i,letter in enumerate(reversed(number))
+                          if letter != u'0' and letter.isnumeric()]:
+            if i == 0:
+                return self.numbers[letter]
+            if i == 1:
+                return self.tens[letter]
+            else:
+                i = (3  if 3  < i < 6  else
+                     6  if 6  < i < 9  else
+                     9  if 9  < i < 12 else
+                     12 if 12 < i < 15 else
+                     15 if 15 < i      else
+                     i)
+                return self.digits[i]
         return u'sıfır'
 
     def _divideWord(self,name, suffix=''):
@@ -164,12 +164,13 @@ class NotValidString(Exception):
 
 if __name__ == '__main__':
     import sys
-    ekle = Suffix()
-    name = unicode(sys.argv[1].decode('utf8'))
-    if len(sys.argv) == 2:
-        for sf in ekle.suffixes:
-            ek = ekle.addSuffix(name,sf)
+    if len(sys.argv) > 1:
+        ekle = Suffix()
+        name = unicode(sys.argv[1].decode('utf8'))
+        if len(sys.argv) == 2:
+            for sf in ekle.suffixes:
+                ek = ekle.addSuffix(name,sf)
+                print "{name}'{suffix}".format(name=name.encode('utf8'),suffix=ek.encode('utf8'))
+        elif len(sys.argv) == 3:
+            ek = ekle.addSuffix(name,sys.argv[2])
             print "{name}'{suffix}".format(name=name.encode('utf8'),suffix=ek.encode('utf8'))
-    elif len(sys.argv) == 3:
-        ek = ekle.addSuffix(name,sys.argv[2])
-        print "{name}'{suffix}".format(name=name.encode('utf8'),suffix=ek.encode('utf8'))
