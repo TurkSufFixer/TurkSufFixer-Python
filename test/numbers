@@ -6,11 +6,12 @@
 2100 = {ü,e,de,den}
 0    = {ı,a,da,dan}
 1    = {i,e,de,den}
+40   = {ı,a,ta,tan}
 20000   = {i,e,de,den}
 6000000 = {u,a,da,dan}
 2020    = {yi,ye,de,den}
 2050    = {yi,ye,de,den}
 1960    = {ı,a,ta,tan}
-50000000000 = {ı,a,da,dan}
 ciğer51 = {i,e,de,den}
-aa00 = {ı,a,da,dan}
+aa00    = {ı,a,da,dan}
+50000000000 = {ı,a,da,dan}

@@ -40,7 +40,7 @@ class ValueTest(unittest.TestCase):
         for name, suffixes in namelist:
             for sf, correctsf in zip(suffix,suffixes):
                 rt = ekle.addSuffix(name,sf)
-                self.assertEqual(correctsf, rt, u"'{}' için '{}' dönmesi gerekirken '{}' döndü.".format(name,correctsf,rt).encode('utf8'))
+                self.assertEqual(correctsf.strip(), rt, u"'{}' için '{}' dönmesi gerekirken '{}' döndü.".format(name,correctsf,rt).encode('utf8'))
 
 if __name__ == '__main__':
     unittest.main()

@@ -128,7 +128,13 @@ class Suffix:
         elif name in self.exceptions or  \
             (name not in self.dictionary and self._checkExceptionalWord(name)):
             soft = True
-        lastVowel = [letter for letter in reversed(name) if letter in self.vowels][0]
+        vowels = [letter for letter in reversed(name) if letter in self.vowels]
+        if vowels:
+            lastVowel = vowels[0]
+        else:
+            lastVowel = 'e'
+            name = name + 'e'
+             
         if suffix[-1] == 'H':
             replacement = ( u'ü' if lastVowel in self.frontrounded   or (soft and lastVowel in self.backrounded)   else
                             u'i' if lastVowel in self.frontunrounded or (soft and lastVowel in self.backunrounded) else
