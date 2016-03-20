@@ -2,7 +2,6 @@
 import turkish
 import io
 
-
 class Suffix:
     suffixes = ['H','A','DA','DAn']
     vowels = u'aıuoeiüö'
@@ -163,16 +162,14 @@ class NotUnicode(Exception):
 class NotValidString(Exception):
     pass
 
-def test():
-    suffixes = ['H','A','DA','DAn']
-    names = io.open("testcases",'r',encoding='utf-8').read().split('\n')
-    ekle = Suffix();
-    for name in names[:-1]:
-        print name.encode("UTF-8")
-        for suf in suffixes:
-            suffix = ekle.addSuffix(name, suf)
-            print "{}'{}".format(name.encode("utf-8"),suffix.encode("utf8"))
-        print "-----------"
-
-if __name__ == "__main__":
-    test()
+if __name__ == '__main__':
+    import sys
+    ekle = Suffix()
+    name = unicode(sys.argv[1].decode('utf8'))
+    if len(sys.argv) == 2:
+        for sf in ekle.suffixes:
+            ek = ekle.addSuffix(name,sf)
+            print "{name}'{suffix}".format(name=name.encode('utf8'),suffix=ek.encode('utf8'))
+    elif len(sys.argv) == 3:
+        ek = ekle.addSuffix(name,sys.argv[2])
+        print "{name}'{suffix}".format(name=name.encode('utf8'),suffix=ek.encode('utf8'))
