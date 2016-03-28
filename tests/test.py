@@ -18,7 +18,7 @@ class ValueTest(unittest.TestCase):
                      ('possesive', self.possesive)
                      ]
         for filename,namelist in test_list:
-            with io.open('test/' + filename,'r',encoding='utf8') as infile:
+            with io.open('tests/' + filename,'r',encoding='utf8') as infile:
                 for line in [x for x in infile if not x.strip().startswith('#')]:
                     #result = re.findall(r'(\w+ )={}', line, re.UNICODE)
                     name, suffixes = line.split('=')

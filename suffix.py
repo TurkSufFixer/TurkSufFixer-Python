@@ -85,14 +85,11 @@ class Suffix:
         firstVowelofSuffix = [letter for letter in suffix if letter in self.vowels][0]
         return ((lastVowelOfName in self.frontvowels) or isFrontVowel) == (firstVowelofSuffix in self.frontvowels)
     def _surfacetolex(self, suffix):
-        #TODO: gereksiz yere yavaş çalışıyor düzelt
-        suffix = list(suffix)
-        for i,letter in enumerate(suffix):
-            if letter in ['a','e']:
-                suffix[i] = 'A'
-            elif letter in [u'ı','i','u',u'ü']:
-                suffix[i] = 'H'
-        return ''.join(suffix)
+        translate_table = [('ae','A'),(u'ıiuü','H')]
+        for surface,lex in translate_table:
+            for letter in surface:
+                suffix = suffix.replace(letter,lex)
+        return suffix
     def _checkCompoundNoun(self, name):
         probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1)}
         possessivesuff = ['lArH','H','yH','sH']
@@ -134,7 +131,7 @@ class Suffix:
         else:
             lastVowel = 'e'
             name = name + 'e'
-             
+
         if suffix[-1] == 'H':
             replacement = ( u'ü' if lastVowel in self.frontrounded   or (soft and lastVowel in self.backrounded)   else
                             u'i' if lastVowel in self.frontunrounded or (soft and lastVowel in self.backunrounded) else
