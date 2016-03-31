@@ -119,7 +119,7 @@ class Suffix:
         return any(word[-1] in self.exceptions for word in self._divideWord(name)
                                                if  word[-1] != '')
     def addSuffix(self, name, suffix):
-        if len(name) == 0:
+        if len(name.strip()) == 0:
             raise NotValidString
         if not isinstance(name,unicode):
             raise NotUnicode
