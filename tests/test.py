@@ -47,4 +47,9 @@ class ValueTest(unittest.TestCase):
                 self.assertEqual(correctsf.strip(), rt, u"'{}' için '{}' dönmesi gerekirken '{}' döndü.".format(name,correctsf,rt).encode('utf8'))
 
 if __name__ == '__main__':
+    print
+    print "+------------------------------------------------------+"
+    print "|UYARI! Unutma bundan sonra i'hali ön belleğe alınıyor!|"
+    print "+------------------------------------------------------+"
+    print 
     unittest.main()

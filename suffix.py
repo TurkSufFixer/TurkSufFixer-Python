@@ -20,13 +20,14 @@ class Suffix:
 
     def __init__(self, dictpath="sozluk/isim.itu", exceptions="sozluk/istisna.itu",
                  haplopath="sozluk/unludus.itu", poss="sozluk/ihali.itu", othpath = "sozluk/digerleri.itu"):
-        self.possfile   = io.open(poss,      "r+",encoding='utf-8')
+        self.update = False
+        self.possfile   = io.open(poss, "r+" , encoding='utf-8')
         self.possessive = set(self.possfile.read().split('\n'))
         pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
-        with io.open(dictpath,  "r+",encoding='utf-8') as dictfile,  \
-             io.open(exceptions,"r+",encoding='utf-8') as exceptfile, \
-             io.open(haplopath, "r+",encoding='utf-8') as haplofile,   \
-             io.open(othpath,   "r+",encoding="utf-8") as otherfile:
+        with io.open(dictpath,  "r",encoding='utf-8') as dictfile,  \
+             io.open(exceptions,"r",encoding='utf-8') as exceptfile, \
+             io.open(haplopath, "r",encoding='utf-8') as haplofile,   \
+             io.open(othpath,   "r",encoding="utf-8") as otherfile:
                  self.exceptions = set(exceptfile.read().split('\n'))
                  self.haplology  = set(haplofile.read().split('\n'))
                  self.dictionary = set(dictfile.read().split('\n')) | self.exceptions | self.haplology
@@ -105,13 +106,12 @@ class Suffix:
     def _checkCompoundNoun(self, name):
         probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1)}
         possessivesuff = ['lArH','H','yH','sH']
-        #return any(self._checkvowelharmony(result[-1], probablesuff[posssuff]) for posssuff in possessivesuff if posssuff in probablesuff.keys()
-        #                                                                       for result in self._divideWord(name,posssuff))
         for posssuff in [x for x in possessivesuff if x in probablesuff.keys()]: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
             wordpairs = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
             for wordpair in wordpairs:
                 if self._checkVowelHarmony(wordpair[-1], probablesuff[posssuff]): #if it is not empty
-                    # TODO: kelimeyi i hali sözlüğüne ekle flag i true yap yazarken codeclerde \n sorunu falan var
+                    self.update = True
+                    self.possessive.add(name)
                     return True
         return False
     def _checkExceptionalWord(self, name):
@@ -127,7 +127,7 @@ class Suffix:
             raise NotInSuffixes
 
         soft = False
-        abbr = False
+        abbreviation = False
         name = turkish.lower(name.strip().split(' ')[-1])
         # TODO: iki kere bölme yapıyoruz bunu düzelt
         if (name[-1] in self.H and name not in self.dictionary and
@@ -140,12 +140,12 @@ class Suffix:
             soft = True
         elif name in self.others:
             if name == self.others[name]:
-                abbr = True
+                abbreviation = True
             else:
                 name = self.others[name]
 
         vowels = [letter for letter in reversed(name) if letter in self.vowels]
-        if not vowels or abbr:
+        if not vowels or abbreviation:
             lastVowel = 'e'
             name = name + 'e'
         else:
@@ -175,6 +175,11 @@ class Suffix:
         return suffix
 
     def __del__(self):
+        if self.update:
+            self.possfile.seek(0)
+            for item in self.possessive:
+                if item != "": self.possfile.write(item + '\n')
+
         self.possfile.close()
 
 class NotInSuffixes(Exception):
