@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import turkish
 import io
+import re
 
 class Suffix:
     suffixes = ['H','A','DA','DAn']
@@ -17,15 +18,26 @@ class Suffix:
     tens =    {'1':u'on','2':u'yirmi','3':u'otuz','4':u'kırk','5':u'elli','6':u'altmış','7':u'yetmiş','8':u'seksen','9':u'doksan'}
     digits =  {2:u'yüz',3:u'bin',6:u'milyon', 9:u'milyar',12:u'trilyon',15:u'katrilyon'}
 
-    def __init__(self, dictpath="sozluk/isim.itu", exceptions="sozluk/istisna.itu", haplopath="sozluk/unludus.itu", poss="sozluk/ihali.itu"):
+    def __init__(self, dictpath="sozluk/isim.itu", exceptions="sozluk/istisna.itu",
+                 haplopath="sozluk/unludus.itu", poss="sozluk/ihali.itu", othpath = "sozluk/digerleri.itu"):
         self.possfile   = io.open(poss,      "r+",encoding='utf-8')
         self.possessive = set(self.possfile.read().split('\n'))
+        pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
         with io.open(dictpath,  "r+",encoding='utf-8') as dictfile,  \
              io.open(exceptions,"r+",encoding='utf-8') as exceptfile, \
-             io.open(haplopath, "r+",encoding='utf-8') as haplofile:
+             io.open(haplopath, "r+",encoding='utf-8') as haplofile,   \
+             io.open(othpath,   "r+",encoding="utf-8") as otherfile:
                  self.exceptions = set(exceptfile.read().split('\n'))
                  self.haplology  = set(haplofile.read().split('\n'))
                  self.dictionary = set(dictfile.read().split('\n')) | self.exceptions | self.haplology
+                 self.others = {}
+                 for line in otherfile:
+                     ret = pattern.search(line)
+                     if ret == None:
+                         l = line.strip().lower()
+                         self.others[l] = l
+                     else:
+                         self.others[ret.group('abbr').lower()] = ret.group('eqv').lower()
 
     def _readNumber(self, number):
         """ Reads number and returns last word of it"""
@@ -96,9 +108,9 @@ class Suffix:
         #return any(self._checkvowelharmony(result[-1], probablesuff[posssuff]) for posssuff in possessivesuff if posssuff in probablesuff.keys()
         #                                                                       for result in self._divideWord(name,posssuff))
         for posssuff in [x for x in possessivesuff if x in probablesuff.keys()]: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
-            results = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
-            for result in results:
-                if self._checkVowelHarmony(result[-1], probablesuff[posssuff]): #if it is not empty
+            wordpairs = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
+            for wordpair in wordpairs:
+                if self._checkVowelHarmony(wordpair[-1], probablesuff[posssuff]): #if it is not empty
                     # TODO: kelimeyi i hali sözlüğüne ekle flag i true yap yazarken codeclerde \n sorunu falan var
                     return True
         return False
@@ -115,22 +127,29 @@ class Suffix:
             raise NotInSuffixes
 
         soft = False
+        abbr = False
         name = turkish.lower(name.strip().split(' ')[-1])
         # TODO: iki kere bölme yapıyoruz bunu düzelt
         if (name[-1] in self.H and name not in self.dictionary and
            (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
         elif name[-1].isnumeric():
-            name = self._readNumber(name)         # if last character of string contains number then take it whole string as number and read it
+            name = self._readNumber(name)  # if last character of string contains number then take it whole string as number and read it
         elif name in self.exceptions or  \
             (name not in self.dictionary and self._checkExceptionalWord(name)):
             soft = True
+        elif name in self.others:
+            if name == self.others[name]:
+                abbr = True
+            else:
+                name = self.others[name]
+
         vowels = [letter for letter in reversed(name) if letter in self.vowels]
-        if vowels:
-            lastVowel = vowels[0]
-        else:
+        if not vowels or abbr:
             lastVowel = 'e'
             name = name + 'e'
+        else:
+            lastVowel = vowels[0]
 
         if suffix[-1] == 'H':
             replacement = ( u'ü' if lastVowel in self.frontrounded   or (soft and lastVowel in self.backrounded)   else

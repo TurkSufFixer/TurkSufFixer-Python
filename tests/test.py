@@ -11,11 +11,13 @@ class ValueTest(unittest.TestCase):
         self.exceptions  = []
         self.consonant   = []
         self.possesive   = []
+        self.others      = []
         test_list = [('simplewords',self.simplewords),
                      ('numbers'    ,self.numbers    ),
                      ('exceptions' ,self.exceptions ),
                      ('consonantharmony',self.consonant),
-                     ('possesive', self.possesive)
+                     ('possesive', self.possesive),
+                     ('others',    self.others)
                      ]
         for filename,namelist in test_list:
             with io.open('tests/' + filename,'r',encoding='utf8') as infile:
@@ -34,6 +36,8 @@ class ValueTest(unittest.TestCase):
         self.basetest(self.consonant)
     def test_possesive(self):
         self.basetest(self.possesive)
+    def test_others(self):
+        self.basetest(self.others)
     def basetest(self, namelist):
         suffix = ['H','A','DA','DAn']
         ekle = Suffix()
