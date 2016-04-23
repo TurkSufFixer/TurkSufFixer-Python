@@ -36,7 +36,7 @@ class Suffix:
                      ret = pattern.search(line)
                      if ret == None:
                          l = line.strip().lower()
-                         self.others[l] = l
+                         self.others[l] = l + 'e'
                      else:
                          self.others[ret.group('abbr').lower()] = ret.group('eqv').lower()
 
@@ -60,7 +60,7 @@ class Suffix:
         return u'sıfır'
 
     def _divideWord(self,name, suffix=''):
-        # TODO: üçe bölmeyi yap
+        # TODO: üçe bölmeyi yap, generator yapabilirsin
         realsuffix = name[-len(suffix):]
         name = name[:-len(suffix)] if len(suffix) > 0 else name
         result = []
@@ -127,7 +127,6 @@ class Suffix:
             raise NotInSuffixes
 
         soft = False
-        abbreviation = False
         name = turkish.lower(name.strip().split(' ')[-1])
         # TODO: iki kere bölme yapıyoruz bunu düzelt
         if (name[-1] in self.H and name not in self.dictionary and
@@ -139,13 +138,10 @@ class Suffix:
             (name not in self.dictionary and self._checkExceptionalWord(name)):
             soft = True
         elif name in self.others:
-            if name == self.others[name]:
-                abbreviation = True
-            else:
-                name = self.others[name]
+            name = self.others[name]
 
         vowels = [letter for letter in reversed(name) if letter in self.vowels]
-        if not vowels or abbreviation:
+        if not vowels:
             lastVowel = 'e'
             name = name + 'e'
         else:
