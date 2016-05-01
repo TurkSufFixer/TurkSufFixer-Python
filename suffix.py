@@ -41,7 +41,12 @@ class Suffix:
                          self.others[ret.group('abbr').lower()] = ret.group('eqv').lower()
 
     def _readNumber(self, number):
-        """ Reads number and returns last word of it"""
+        """Reads number and returns last word of it
+           Example:
+                1920    -> yirmi
+                1993    -> üç
+                bordo61 -> bir
+        """
         if len(number) == 1 and number[-1] == '0': return u'sıfır'
         for i, letter in [(i,letter) for i,letter in enumerate(reversed(number))
                           if letter != u'0' and letter.isnumeric()]:
@@ -60,6 +65,7 @@ class Suffix:
         return u'sıfır'
 
     def _divideWord(self,name, suffix=''):
+        """Divides words to two words which are present in dictionary"""
         # TODO: üçe bölmeyi yap
         realsuffix = name[-len(suffix):]
         name = name[:-len(suffix)] if len(suffix) > 0 else name
@@ -77,16 +83,19 @@ class Suffix:
                     secondWord = self._checkEllipsisAffix(secondWord,realsuffix)
                     if secondWord: yield firstWord,secondWord
     def _checkEllipsisAffix(self, name, realsuffix):
+        """Checks ellipsis affixation rule
+           if the word fits the word returns root of word
+           otherwise returns empty string"""
         if realsuffix not in self.H: return ""
         name = (name[:-1] + realsuffix + name[-1])
         return name if name in self.haplology else ""
     def _checkConsonantHarmony(self, name, suffix):
-        """ Checks consonant harmony rule """
+        """Checks consonant harmony rule """
         return suffix == 'H' and any(name.endswith(lastletter) and (name[:-1] + replacement) in self.dictionary
                                      for lastletter,replacement in [(u'ğ',u'k'),(u'g',u'k'),(u'b',u'p'),(u'c',u'ç'),(u'd',u't')])
 
     def _checkVowelHarmony(self, name, suffix):
-        # TODO: doğruluğunu kontrol et
+        """Checks vowel harmony"""
         lastVowelOfName = ''
         isFrontVowel = False
         if name in self.exceptions:
@@ -96,12 +105,14 @@ class Suffix:
         firstVowelofSuffix = [letter for letter in suffix if letter in self.vowels][0]
         return ((lastVowelOfName in self.frontvowels) or isFrontVowel) == (firstVowelofSuffix in self.frontvowels)
     def _surfacetolex(self, suffix):
+        """Turns given suffix to lex form"""
         translate_table = [('ae','A'),(u'ıiuü','H')]
         for surface,lex in translate_table:
             for letter in surface:
                 suffix = suffix.replace(letter,lex)
         return suffix
     def _checkCompoundNoun(self, name):
+        """Checks if given name is a compound noun or not"""
         probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1)}
         possessivesuff = {'lArH','H','yH','sH'}
         for posssuff in [x for x in possessivesuff if x in probablesuff]: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
@@ -113,10 +124,11 @@ class Suffix:
                     return True
         return False
     def _checkExceptionalWord(self, name):
-        """check if second word is in exception lists"""
+        """Checks if second word of compound noun is in exception lists"""
         return any(word[-1] in self.exceptions for word in self._divideWord(name)
-                                               if  word[-1] != '')
+                                               if  word[-1])
     def addSuffix(self, name, suffix):
+        """Adds suffix to given name"""
         if len(name.strip()) == 0:
             raise NotValidString
         if not isinstance(name,unicode):
