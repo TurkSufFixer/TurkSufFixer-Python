@@ -60,24 +60,22 @@ class Suffix:
         return u'sıfır'
 
     def _divideWord(self,name, suffix=''):
-        # TODO: üçe bölmeyi yap, generator yapabilirsin
+        # TODO: üçe bölmeyi yap
         realsuffix = name[-len(suffix):]
         name = name[:-len(suffix)] if len(suffix) > 0 else name
         result = []
         if name in self.dictionary or self._checkConsonantHarmony(name,suffix):
-            result.append([name])
+            yield [name]
 
         for i in range(2, len(name)-1): #ikiden başlıyoruz çünkü tek harfli kelime yok varsayıyoruz
             firstWord = name[:i]; secondWord = name[i:]
-            #print firstWord.encode('utf8'), secondWord.encode('utf8')
             if firstWord in self.dictionary:
                 #check whether second word in dictionary or affected by consonant harmony rule
                 if secondWord in self.dictionary or self._checkConsonantHarmony(secondWord,suffix):
-                     result.append([firstWord,secondWord])
+                     yield firstWord,secondWord
                 else:
                     secondWord = self._checkEllipsisAffix(secondWord,realsuffix)
-                    if secondWord != "": result.append([firstWord,secondWord])
-        return result
+                    if secondWord: yield firstWord,secondWord
     def _checkEllipsisAffix(self, name, realsuffix):
         if realsuffix not in self.H: return ""
         name = (name[:-1] + realsuffix + name[-1])
@@ -105,8 +103,8 @@ class Suffix:
         return suffix
     def _checkCompoundNoun(self, name):
         probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1)}
-        possessivesuff = ['lArH','H','yH','sH']
-        for posssuff in [x for x in possessivesuff if x in probablesuff.keys()]: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
+        possessivesuff = {'lArH','H','yH','sH'}
+        for posssuff in [x for x in possessivesuff if x in probablesuff]: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
             wordpairs = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
             for wordpair in wordpairs:
                 if self._checkVowelHarmony(wordpair[-1], probablesuff[posssuff]): #if it is not empty
@@ -174,7 +172,8 @@ class Suffix:
         if self.update:
             self.possfile.seek(0)
             for item in self.possessive:
-                if item != "": self.possfile.write(item + '\n')
+                if item:
+                    self.possfile.write(item + '\n')
 
         self.possfile.close()
 
