@@ -1,5 +1,4 @@
 # -*- coding: UTF-8 -*-
-import turkish
 import io
 import re
 
@@ -139,7 +138,7 @@ class Suffix:
         soft = False
         split = name.strip().split(' ')
         wordNumber = len(split)
-        name = turkish.lower(split[-1])
+        name = turkishLower(split[-1])
         # TODO: iki kere bölme yapıyoruz bunu düzelt
         if (name[-1] in self.H and (wordNumber > 1 or name not in self.dictionary) and
            (name in self.possessive or self._checkCompoundNoun(name))):
@@ -197,6 +196,34 @@ class NotUnicode(Exception):
     pass
 class NotValidString(Exception):
     pass
+
+# Do not use this table in your application.
+# This table made for library usage
+# Letters with circumflex will fail if you use this table
+# All letters with circumflex (şapkalı) will translated to 'e'
+
+lcase_table = u'abcçdefgğhıijklmnoöprsştuüvyz' + u'eeüüöö\xC2\xE2\xDB\xFB\xD4\xF4'
+ucase_table = u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ' + u'\xC2\xE2\xDB\xFB\xD4\xF4EEÜÜÖÖ'
+
+def turkishLower(data):
+    return ''.join(map(_turkishtolower, data))
+def turkishUpper(data):
+    return ''.join(map(_turkishtoupper, data))
+
+def _turkishtolower(char):
+    try:
+        i = ucase_table.index(char)
+        return lcase_table[i]
+    except:
+        return char
+
+def _turkishtoupper(char):
+    try:
+        i = lcase_table.index(char)
+        return ucase_table[i]
+    except:
+        return char
+
 
 if __name__ == '__main__':
     import sys

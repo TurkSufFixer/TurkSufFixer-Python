@@ -23,6 +23,7 @@ class ValueTest(unittest.TestCase):
             with io.open('tests/' + filename,'r',encoding='utf8') as infile:
                 for line in [x for x in infile if not x.strip().startswith('#')]:
                     #result = re.findall(r'(\w+ )={}', line, re.UNICODE)
+                    if len(line.strip()) == 0: continue
                     name, suffixes = line.split('=')
                     suffixes = suffixes.strip()[1:-1].split(',')
                     namelist.append((name.strip(), suffixes))
@@ -51,5 +52,5 @@ if __name__ == '__main__':
     print "+------------------------------------------------------+"
     print "|UYARI! Unutma bundan sonra i'hali ön belleğe alınıyor!|"
     print "+------------------------------------------------------+"
-    print 
+    print
     unittest.main()
