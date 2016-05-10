@@ -137,9 +137,11 @@ class Suffix:
             raise NotInSuffixes
 
         soft = False
-        name = turkish.lower(name.strip().split(' ')[-1])
+        split = name.strip().split(' ')
+        wordNumber = len(split)
+        name = turkish.lower(split[-1])
         # TODO: iki kere bölme yapıyoruz bunu düzelt
-        if (name[-1] in self.H and name not in self.dictionary and
+        if (name[-1] in self.H and (wordNumber > 1 or name not in self.dictionary) and
            (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
         elif name[-1].isnumeric():
