@@ -63,7 +63,7 @@ class Suffix:
                 return self.digits[i]
         return u'sıfır'
 
-    def _divideWord(self,name, suffix=''):
+    def _divideWord(self,name, suffix):
         """Divides words to two words which are present in dictionary"""
         # TODO: üçe bölmeyi yap
         realsuffix = name[-len(suffix):]
@@ -124,7 +124,7 @@ class Suffix:
         return False
     def _checkExceptionalWord(self, name):
         """Checks if second word of compound noun is in exception lists"""
-        return any(word[-1] in self.exceptions for word in self._divideWord(name)
+        return any(word[-1] in self.exceptions for word in self._divideWord(name,"")
                                                if  word[-1])
     def addSuffix(self, name, suffix):
         """Adds suffix to given name"""
@@ -139,11 +139,12 @@ class Suffix:
         split = name.strip().split(' ')
         wordNumber = len(split)
         name = turkishLower(split[-1])
-        # TODO: iki kere bölme yapıyoruz bunu düzelt
+        # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
+        # TODO: eğer iki versiyon yaparsan bunu notlarına ekle
         if (name[-1] in self.H and (wordNumber > 1 or name not in self.dictionary) and
            (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
-        elif name[-1].isnumeric():
+        elif name[-1] in ['0','1','2','3','4','5','6','7','8','9']:
             name = self._readNumber(name)  # if last character of string contains number then take it whole string as number and read it
         elif name in self.exceptions or  \
             (name not in self.dictionary and self._checkExceptionalWord(name)):
@@ -197,10 +198,12 @@ class NotUnicode(Exception):
 class NotValidString(Exception):
     pass
 
+
+
 # Do not use this table in your application.
 # This table made for library usage
 # Letters with circumflex will fail if you use this table
-# All letters with circumflex (şapkalı) will translated to 'e'
+# All letters with circumflex (şapkalı) will translated to correspondence front vowels
 
 lcase_table = u'abcçdefgğhıijklmnoöprsştuüvyz' + u'eeüüöö\xC2\xE2\xDB\xFB\xD4\xF4'
 ucase_table = u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ' + u'\xC2\xE2\xDB\xFB\xD4\xF4EEÜÜÖÖ'
