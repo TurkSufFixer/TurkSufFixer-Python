@@ -71,7 +71,9 @@ class Suffix:
         result = []
         if name in self.dictionary or self._checkConsonantHarmony(name,suffix):
             yield [name]
-
+        else:
+            realword = self._checkEllipsisAffix(name,realsuffix)
+            if realword: yield [realword]
         for i in range(2, len(name)-1): #ikiden başlıyoruz çünkü tek harfli kelime yok varsayıyoruz
             firstWord = name[:i]; secondWord = name[i:]
             if firstWord in self.dictionary:
