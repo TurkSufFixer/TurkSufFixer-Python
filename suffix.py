@@ -16,7 +16,7 @@ class Suffix:
     numbers = {'0':u'sıfır', '1':u'bir','2':u'iki','3':u'üç','4':u'dört', '5':u'beş','6':u'altı','7':u'yedi','8':u'sekiz','9':u'dokuz'}
     tens =    {'1':u'on','2':u'yirmi','3':u'otuz','4':u'kırk','5':u'elli','6':u'altmış','7':u'yetmiş','8':u'seksen','9':u'doksan'}
     digits =  {2:u'yüz',3:u'bin',6:u'milyon', 9:u'milyar',12:u'trilyon',15:u'katrilyon'}
-
+    superscript = {u'\xB2':u"kare",u'\xB3':u"küp"}
     def __init__(self, dictpath="sozluk/isim.itu", exceptions="sozluk/istisna.itu",
                  haplopath="sozluk/unludus.itu", poss="sozluk/ihali.itu", othpath = "sozluk/digerleri.itu"):
         self.update = False
@@ -151,6 +151,8 @@ class Suffix:
             soft = True
         elif name in self.others:
             name = self.others[name]
+        elif name[-1] in self.superscript:
+            name = self.superscript[name[-1]]
 
         vowels = [letter for letter in reversed(name) if letter in self.vowels]
         if not vowels:
