@@ -13,9 +13,10 @@ class Suffix:
     frontrounded = frontvowels[2:]
     hardconsonant = u'fstkçşhp'
     H = [u'ı',u'i',u'u',u'ü']
-    numbers = {'0':u'sıfır', '1':u'bir','2':u'iki','3':u'üç','4':u'dört', '5':u'beş','6':u'altı','7':u'yedi','8':u'sekiz','9':u'dokuz'}
+    ones = {'0':u'sıfır', '1':u'bir','2':u'iki','3':u'üç','4':u'dört', '5':u'beş','6':u'altı','7':u'yedi','8':u'sekiz','9':u'dokuz'}
     tens =    {'1':u'on','2':u'yirmi','3':u'otuz','4':u'kırk','5':u'elli','6':u'altmış','7':u'yetmiş','8':u'seksen','9':u'doksan'}
-    digits =  {2:u'yüz',3:u'bin',6:u'milyon', 9:u'milyar',12:u'trilyon',15:u'katrilyon'}
+    digits =  {0:u'yüz',3:u'bin',6:u'milyon', 9:u'milyar',12:u'trilyon',15:u'katrilyon'}
+    numbers = [ones, tens, digits]
     superscript = {u'\xB2':u"kare",u'\xB3':u"küp"}
     def __init__(self, dictpath="sozluk/isim.itu", exceptions="sozluk/istisna.itu",
                  haplopath="sozluk/unludus.itu", poss="sozluk/ihali.itu", othpath = "sozluk/digerleri.itu"):
@@ -46,21 +47,14 @@ class Suffix:
                 1993    -> üç
                 bordo61 -> bir
         """
-        if len(number) == 1 and number[-1] == '0': return u'sıfır'
         for i, letter in [(i,letter) for i,letter in enumerate(reversed(number))
                           if letter != u'0' and letter.isnumeric()]:
-            if i == 0:
-                return self.numbers[letter]
-            if i == 1:
-                return self.tens[letter]
+            if i < 2:
+                return self.numbers[i][letter]
             else:
-                i = (3  if 3  < i < 6  else
-                     6  if 6  < i < 9  else
-                     9  if 9  < i < 12 else
-                     12 if 12 < i < 15 else
-                     15 if 15 < i      else
-                     i)
-                return self.digits[i]
+                i = (i / 3) * 3
+                i = i if i <= 15 else 15
+                return self.numbers[2][i]
         return u'sıfır'
 
     def _divideWord(self,name, suffix):
