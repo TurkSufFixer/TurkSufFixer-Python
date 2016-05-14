@@ -22,15 +22,15 @@ class Suffix:
                  haplopath="sozluk/unludus.itu", poss="sozluk/ihali.itu", othpath = "sozluk/digerleri.itu"):
         self.update = False
         self.possfile   = io.open(poss, "r+" , encoding='utf-8')
-        self.possessive = set(self.possfile.read().split('\n'))
+        self.possessive = set(self.possfile.read().splitlines())
         pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
         with io.open(dictpath,  "r",encoding='utf-8') as dictfile,  \
              io.open(exceptions,"r",encoding='utf-8') as exceptfile, \
              io.open(haplopath, "r",encoding='utf-8') as haplofile,   \
              io.open(othpath,   "r",encoding="utf-8") as otherfile:
-                 self.exceptions = set(exceptfile.read().split('\n'))
-                 self.haplology  = set(haplofile.read().split('\n'))
-                 self.dictionary = set(dictfile.read().split('\n')) | self.exceptions | self.haplology
+                 self.exceptions = set(exceptfile.read().splitlines())
+                 self.haplology  = set(haplofile.read().splitlines())
+                 self.dictionary = set(dictfile.read().splitlines()) | self.exceptions | self.haplology
                  self.others = {}
                  for line in otherfile:
                      ret = pattern.search(line)
@@ -53,7 +53,7 @@ class Suffix:
                 return self.numbers[i][letter]
             else:
                 i = (i / 3) * 3
-                i = i if i <= 15 else 15
+                i = i if i < 15 else 15
                 return self.numbers[2][i]
         return u'sıfır'
 
