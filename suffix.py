@@ -18,12 +18,13 @@ class Suffix:
     digits =  {0:u'yüz',3:u'bin',6:u'milyon', 9:u'milyar',12:u'trilyon',15:u'katrilyon'}
     numbers = [ones, tens, digits]
     superscript = {u'\xB2':u"kare",u'\xB3':u"küp"}
-    def __init__(self, dictpath="sozluk/isim.itu", exceptions="sozluk/istisna.itu",
-                 haplopath="sozluk/unludus.itu", poss="sozluk/ihali.itu", othpath = "sozluk/digerleri.itu"):
+    def __init__(self, dictpath="sozluk/kelimeler.txt", exceptions="sozluk/istisnalar.txt",
+                 haplopath="sozluk/unludusmesi.txt", poss="sozluk/iyelik.txt", othpath = "sozluk/digerleri.txt"):
         self.update = False
         self.possfile   = io.open(poss, "r+" , encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
         pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
+		# TODO: exception ekle
         with io.open(dictpath,  "r",encoding='utf-8') as dictfile,  \
              io.open(exceptions,"r",encoding='utf-8') as exceptfile, \
              io.open(haplopath, "r",encoding='utf-8') as haplofile,   \
@@ -59,10 +60,8 @@ class Suffix:
 
     def _divideWord(self,name, suffix):
         """Divides words to two words which are present in dictionary"""
-        # TODO: üçe bölmeyi yap
         realsuffix = name[-len(suffix):]
         name = name[:-len(suffix)] if len(suffix) > 0 else name
-        result = []
         if name in self.dictionary or self._checkConsonantHarmony(name,suffix):
             yield [name]
         else:
@@ -109,8 +108,8 @@ class Suffix:
     def _checkCompoundNoun(self, name):
         """Checks if given name is a compound noun or not"""
         probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1)}
-        possessivesuff = {'lArH','H','yH','sH'}
-        for posssuff in [x for x in possessivesuff if x in probablesuff]: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
+        possessivesuff = {'lArH','H','yH','sH'} #TODO: bu tarz tanımlamaları başa al
+        for posssuff in probablesuff.viewkeys() & possessivesuff: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
             wordpairs = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
             for wordpair in wordpairs:
                 if self._checkVowelHarmony(wordpair[-1], probablesuff[posssuff]): #if it is not empty
@@ -137,10 +136,11 @@ class Suffix:
         name = turkishLower(split[-1])
         # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
         # TODO: eğer iki versiyon yaparsan bunu notlarına ekle
+        # TODO: ihali dosyasının adını düzelt. Şu anda yanıltıcı
         if (name[-1] in self.H and (wordNumber > 1 or name not in self.dictionary) and
            (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
-        elif name[-1] in ['0','1','2','3','4','5','6','7','8','9']:
+        elif name[-1] in "0123456789":
             name = self._readNumber(name)  # if last character of string contains number then take it whole string as number and read it
         elif name in self.exceptions or  \
             (name not in self.dictionary and self._checkExceptionalWord(name)):
@@ -174,7 +174,7 @@ class Suffix:
                 suffix = suffix.replace('D','t')
             else:
                 suffix = suffix.replace('D','d')
-        # and finally add buffer letter, if we added n buffer letter before this code will discarded
+        # and finally add buffer letter, if we added n buffer letter before this code will be discarded
         if name[-1] in self.vowels and suffix[0] in self.vowels:
             suffix = 'y' + suffix
 
