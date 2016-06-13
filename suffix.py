@@ -108,7 +108,7 @@ class Suffix:
     def _checkCompoundNoun(self, name):
         """Checks if given name is a compound noun or not"""
         probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1)}
-        possessivesuff = {'lArH','H','yH','sH'} #TODO: bu tarz tanımlamaları başa al
+        possessivesuff = {'lArH','H','yH','sH'}
         for posssuff in probablesuff.viewkeys() & possessivesuff: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
             wordpairs = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
             for wordpair in wordpairs:
@@ -123,7 +123,8 @@ class Suffix:
                                                if  word[-1])
     def addSuffix(self, name, suffix):
         """Adds suffix to given name"""
-        if len(name.strip()) == 0:
+        name = name.strip()
+        if len(name) == 0:
             raise NotValidString
         if not isinstance(name,unicode):
             raise NotUnicode
@@ -131,12 +132,11 @@ class Suffix:
             raise NotInSuffixes
 
         soft = False
-        split = name.strip().split(' ')
+        split = name.split(' ')
         wordNumber = len(split)
         name = turkishLower(split[-1])
         # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
         # TODO: eğer iki versiyon yaparsan bunu notlarına ekle
-        # TODO: ihali dosyasının adını düzelt. Şu anda yanıltıcı
         if (name[-1] in self.H and (wordNumber > 1 or name not in self.dictionary) and
            (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
@@ -181,6 +181,7 @@ class Suffix:
         return suffix
 
     def __del__(self):
+        #TODO: birden çok instance'ta patlayacak
         if self.update:
             self.possfile.seek(0)
             for item in self.possessive:
