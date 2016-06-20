@@ -1,7 +1,11 @@
 # -*- coding: UTF-8 -*-
 import io
 import re
-
+class Suffixes:
+    ACC = "H"
+    DAT = "A"
+    LOC = "DA"
+    ABL = "DAn"
 class Suffix:
     suffixes = ['H','A','DA','DAn']
     vowels = u'aıuoeiüö'
@@ -121,7 +125,18 @@ class Suffix:
         """Checks if second word of compound noun is in exception lists"""
         return any(word[-1] in self.exceptions for word in self._divideWord(name,"")
                                                if  word[-1])
-    def addSuffix(self, name, suffix):
+    def makeAccusative(self, name, apostrophe=True):
+        return self.constructName(name,Suffixes.ACC,apostrophe)
+    def makeDative(self, name, apostrophe=True):
+        return self.constructName(name,Suffixes.DAT,apostrophe)
+    def makeLocative(self, name, apostrophe=True):
+        return self.constructName(name,Suffixes.LOC,apostrophe)
+    def makeAblative(self, name, apostrophe=True):
+        return self.constructName(name,Suffixes.ABL,apostrophe)
+    def constructName(self, name, suffix, apostrophe=True):
+        apostrophe = "'" if apostrophe else ""
+        return "{name}{aps}{suffix}".format(name=name,aps=apostrophe, suffix=self.getSuffix(name,suffix))
+    def getSuffix(self, name, suffix):
         """Adds suffix to given name"""
         name = name.strip()
         if len(name) == 0:
@@ -137,6 +152,10 @@ class Suffix:
         name = turkishLower(split[-1])
         # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
         # TODO: eğer iki versiyon yaparsan bunu notlarına ekle
+        # TODO: daha fazla case ekle
+        # TODO: gönderilen isimsiz dönen de olsun
+        # TODO: C++ ve ruby'de yaz
+
         if (name[-1] in self.H and (wordNumber > 1 or name not in self.dictionary) and
            (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
