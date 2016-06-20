@@ -6,8 +6,10 @@ class Suffixes:
     DAT = "A"
     LOC = "DA"
     ABL = "DAn"
+    INS = "lA"
+
 class Suffix:
-    suffixes = ['H','A','DA','DAn']
+    suffixes = ['H','A','DA','DAn','lA']
     vowels = u'aıuoeiüö'
     backvowels = vowels[:4]
     frontvowels = vowels[4:]
@@ -133,6 +135,8 @@ class Suffix:
         return self.constructName(name,Suffixes.LOC,apostrophe)
     def makeAblative(self, name, apostrophe=True):
         return self.constructName(name,Suffixes.ABL,apostrophe)
+    def makeInstrumental(self, name, apostrophe=True):
+        return self.constructName(name,Suffixes.INS,apostrophe)
     def constructName(self, name, suffix, apostrophe=True):
         apostrophe = "'" if apostrophe else ""
         return "{name}{aps}{suffix}".format(name=name,aps=apostrophe, suffix=self.getSuffix(name,suffix))
@@ -145,7 +149,7 @@ class Suffix:
             raise NotUnicode
         if suffix not in self.suffixes:
             raise NotInSuffixes
-
+        rawsuffix = suffix
         soft = False
         split = name.split(' ')
         wordNumber = len(split)
@@ -153,11 +157,10 @@ class Suffix:
         # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
         # TODO: eğer iki versiyon yaparsan bunu notlarına ekle
         # TODO: daha fazla case ekle
-        # TODO: gönderilen isimsiz dönen de olsun
         # TODO: C++ ve ruby'de yaz
 
-        if (name[-1] in self.H and (wordNumber > 1 or name not in self.dictionary) and
-           (name in self.possessive or self._checkCompoundNoun(name))):
+        if (rawsuffix != Suffixes.INS and name[-1] in self.H and (wordNumber > 1 or name not in self.dictionary)
+            and (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
         elif name[-1] in "0123456789":
             name = self._readNumber(name)  # if last character of string contains number then take it whole string as number and read it
@@ -194,7 +197,9 @@ class Suffix:
             else:
                 suffix = suffix.replace('D','d')
         # and finally add buffer letter, if we added n buffer letter before this code will be discarded
-        if name[-1] in self.vowels and suffix[0] in self.vowels:
+        # for instrumental case, it will add "y" if name ends with vowel
+        if ((name[-1] in self.vowels and suffix[0] in self.vowels)
+            or (rawsuffix == Suffixes.INS and name[-1] in self.vowels)):
             suffix = 'y' + suffix
 
         return suffix
