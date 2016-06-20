@@ -7,9 +7,10 @@ class Suffixes:
     LOC = "DA"
     ABL = "DAn"
     INS = "lA"
+    PLU = "lAr"
 
 class Suffix:
-    suffixes = ['H','A','DA','DAn','lA']
+    suffixes = ['H','A','DA','DAn','lA','lAr']
     vowels = u'aıuoeiüö'
     backvowels = vowels[:4]
     frontvowels = vowels[4:]
@@ -139,8 +140,10 @@ class Suffix:
         return self.constructName(name,Suffixes.ABL,apostrophe)
     def makeInstrumental(self, name, apostrophe=True):
         return self.constructName(name,Suffixes.INS,apostrophe)
+    def makePlural(self, name, apostrophe=True):
+        return self.constructName(name,Suffixes.PLU,apostrophe)
     def constructName(self, name, suffix, apostrophe=True):
-        return "{name}{aps}{suffix}".format(name=name,aps= "'" if apostrophe else "", suffix=self.getSuffix(name,suffix))
+        return u"{name}{aps}{suffix}".format(name=name,aps= "'" if apostrophe else "", suffix=self.getSuffix(name,suffix))
     def getSuffix(self, name, suffix):
         """Adds suffix to given name"""
         name = name.strip()
@@ -160,8 +163,8 @@ class Suffix:
         # TODO: daha fazla case ekle
         # TODO: C++ ve ruby'de yaz
 
-        if (rawsuffix != Suffixes.INS and name[-1] in self.H and (wordNumber > 1 or name not in self.dictionary)
-            and (name in self.possessive or self._checkCompoundNoun(name))):
+        if ((rawsuffix != Suffixes.INS and rawsuffix != Suffixes.PLU) and name[-1] in self.H and
+        (wordNumber > 1 or name not in self.dictionary) and (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
         elif name[-1] in "0123456789":
             name = self._readNumber(name)  # if last character of string contains number then take it whole string as number and read it
