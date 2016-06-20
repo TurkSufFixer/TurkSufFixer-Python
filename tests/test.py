@@ -44,7 +44,7 @@ class ValueTest(unittest.TestCase):
         ekle = Suffix()
         for name, suffixes in namelist:
             for sf, correctsf in zip(suffix,suffixes):
-                rt = ekle.addSuffix(name,sf)
+                rt = ekle.getSuffix(name,sf)
                 self.assertEqual(correctsf.strip(), rt, u"'{}' için '{}' dönmesi gerekirken '{}' döndü.".format(name,correctsf,rt).encode('utf8'))
 
 if __name__ == '__main__':
