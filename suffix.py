@@ -30,22 +30,24 @@ class Suffix:
         self.possfile   = io.open(poss, "r+" , encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
         pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
-		# TODO: exception ekle
-        with io.open(dictpath,  "r",encoding='utf-8') as dictfile,  \
-             io.open(exceptions,"r",encoding='utf-8') as exceptfile, \
-             io.open(haplopath, "r",encoding='utf-8') as haplofile,   \
-             io.open(othpath,   "r",encoding="utf-8") as otherfile:
-                 self.exceptions = set(exceptfile.read().splitlines())
-                 self.haplology  = set(haplofile.read().splitlines())
-                 self.dictionary = set(dictfile.read().splitlines()) | self.exceptions | self.haplology
-                 self.others = {}
-                 for line in otherfile:
-                     ret = pattern.search(line)
-                     if ret == None:
-                         l = line.strip().lower()
-                         self.others[l] = l + 'e'
-                     else:
-                         self.others[ret.group('abbr').lower()] = ret.group('eqv').lower()
+        try:
+            with io.open(dictpath,  "r",encoding='utf-8') as dictfile,  \
+                 io.open(exceptions,"r",encoding='utf-8') as exceptfile, \
+                 io.open(haplopath, "r",encoding='utf-8') as haplofile,   \
+                 io.open(othpath,   "r",encoding="utf-8") as otherfile:
+                     self.exceptions = set(exceptfile.read().splitlines())
+                     self.haplology  = set(haplofile.read().splitlines())
+                     self.dictionary = set(dictfile.read().splitlines()) | self.exceptions | self.haplology
+                     self.others = {}
+                     for line in otherfile:
+                         ret = pattern.search(line)
+                         if ret == None:
+                             l = line.strip().lower()
+                             self.others[l] = l + 'e'
+                         else:
+                             self.others[ret.group('abbr').lower()] = ret.group('eqv').lower()
+        except IOError:
+            raise DictionaryNotFound
 
     def _readNumber(self, number):
         """Reads number and returns last word of it
@@ -138,8 +140,7 @@ class Suffix:
     def makeInstrumental(self, name, apostrophe=True):
         return self.constructName(name,Suffixes.INS,apostrophe)
     def constructName(self, name, suffix, apostrophe=True):
-        apostrophe = "'" if apostrophe else ""
-        return "{name}{aps}{suffix}".format(name=name,aps=apostrophe, suffix=self.getSuffix(name,suffix))
+        return "{name}{aps}{suffix}".format(name=name,aps= "'" if apostrophe else "", suffix=self.getSuffix(name,suffix))
     def getSuffix(self, name, suffix):
         """Adds suffix to given name"""
         name = name.strip()
@@ -220,7 +221,8 @@ class NotUnicode(Exception):
     pass
 class NotValidString(Exception):
     pass
-
+class DictionaryNotFound(Exception):
+    pass
 
 
 # Do not use this table in your application.
