@@ -27,8 +27,8 @@ class Suffix:
     superscript = {u'\xB2':u"kare",u'\xB3':u"küp"}
     def __init__(self, dictpath="sozluk/kelimeler.txt", exceptions="sozluk/istisnalar.txt",
                  haplopath="sozluk/unludusmesi.txt", poss="sozluk/iyelik.txt", othpath = "sozluk/digerleri.txt"):
-        self.update = False
-        self.possfile   = io.open(poss, "r+" , encoding='utf-8')
+        self.updated = set()
+        self.possfile   = io.open(poss, "a+" , encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
         pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
         try:
@@ -122,7 +122,7 @@ class Suffix:
             wordpairs = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
             for wordpair in wordpairs:
                 if self._checkVowelHarmony(wordpair[-1], probablesuff[posssuff]): #if it is not empty
-                    self.update = True
+                    self.updated.add(name)
                     self.possessive.add(name)
                     return True
         return False
@@ -209,13 +209,9 @@ class Suffix:
         return suffix
 
     def __del__(self):
-        #TODO: birden çok instance'ta patlayacak
-        if self.update:
-            self.possfile.seek(0)
-            for item in self.possessive:
-                if item:
-                    self.possfile.write(item + '\n')
-
+        if self.updated:
+            for news in self.updated:
+                self.possfile.write(news + "\n")
         self.possfile.close()
 
 class NotInSuffixes(Exception):
