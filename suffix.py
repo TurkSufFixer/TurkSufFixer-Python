@@ -28,7 +28,7 @@ class Suffix:
     def __init__(self, dictpath="sozluk/kelimeler.txt", exceptions="sozluk/istisnalar.txt",
                  haplopath="sozluk/unludusmesi.txt", poss="sozluk/iyelik.txt", othpath = "sozluk/digerleri.txt"):
         self.updated = set()
-        self.possfile   = io.open(poss, "a+" , encoding='utf-8')
+        self.possfile   = io.open(poss, "r+" , encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
         pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
         try:
