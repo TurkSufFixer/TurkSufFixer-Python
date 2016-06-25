@@ -160,7 +160,6 @@ class Suffix:
         name = turkishLower(split[-1])
         # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
         # TODO: eğer iki versiyon yaparsan bunu notlarına ekle
-        # TODO: daha fazla case ekle
         # TODO: C++ ve ruby'de yaz
 
         if ((rawsuffix != Suffixes.INS and rawsuffix != Suffixes.PLU) and name[-1] in self.H and
@@ -176,12 +175,12 @@ class Suffix:
         elif name[-1] in self.superscript:
             name = self.superscript[name[-1]]
 
-        vowels = [letter for letter in reversed(name) if letter in self.vowels]
-        if not vowels:
+        vowels = (letter for letter in reversed(name) if letter in self.vowels)
+        try:
+            lastVowel = next(vowels)
+        except StopIteration:
             lastVowel = 'e'
             name = name + 'e'
-        else:
-            lastVowel = vowels[0]
 
         if suffix[-1] == 'H':
             replacement = ( u'ü' if lastVowel in self.frontrounded   or (soft and lastVowel in self.backrounded)   else
@@ -259,8 +258,8 @@ if __name__ == '__main__':
         name = unicode(sys.argv[1].decode('utf8'))
         if len(sys.argv) == 2:
             for sf in ekle.suffixes:
-                ek = ekle.addSuffix(name,sf)
+                ek = ekle.getSuffix(name,sf)
                 print "{name}'{suffix}".format(name=name.encode('utf8'),suffix=ek.encode('utf8'))
         elif len(sys.argv) == 3:
-            ek = ekle.addSuffix(name,sys.argv[2])
+            ek = ekle.getSuffix(name,sys.argv[2])
             print "{name}'{suffix}".format(name=name.encode('utf8'),suffix=ek.encode('utf8'))
