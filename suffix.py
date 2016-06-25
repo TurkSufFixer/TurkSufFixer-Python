@@ -41,12 +41,12 @@ class Suffix:
                      self.dictionary = set(dictfile.read().splitlines()) | self.exceptions | self.haplology
                      self.others = {}
                      for line in otherfile:
-                         ret = pattern.search(line)
+                         l = turkishLower(line.strip())
+                         ret = pattern.search(l)
                          if ret == None:
-                             l = line.strip().lower()
                              self.others[l] = l + 'e'
                          else:
-                             self.others[ret.group('abbr').lower()] = ret.group('eqv').lower()
+                             self.others[ret.group('abbr')] = ret.group('eqv')
         except IOError:
             raise DictionaryNotFound
 
