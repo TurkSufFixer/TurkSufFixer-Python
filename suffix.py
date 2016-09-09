@@ -18,6 +18,8 @@ class Suffix:
     backrounded = backvowels[2:]
     frontunrounded = frontvowels[:2]
     frontrounded = frontvowels[2:]
+    roundedvowels   = u"uüoö"
+    unroundedvowels = u"aeıi"
     hardconsonant = u'fstkçşhp'
     H = [u'ı',u'i',u'u',u'ü']
     ones = {'0':u'sıfır', '1':u'bir','2':u'iki','3':u'üç','4':u'dört', '5':u'beş','6':u'altı','7':u'yedi','8':u'sekiz','9':u'dokuz'}
@@ -47,6 +49,7 @@ class Suffix:
                              self.others[l] = l + 'e'
                          else:
                              self.others[ret.group('abbr')] = ret.group('eqv')
+                     self.dictionary |= self.others.viewkeys()
         except IOError:
             raise DictionaryNotFound
 
@@ -103,10 +106,10 @@ class Suffix:
         isFrontVowel = False
         if name in self.exceptions:
             isFrontVowel = True
-        else:
-            lastVowelOfName = [letter for letter in reversed(name) if letter in self.vowels][0]
+        lastVowelOfName = [letter for letter in reversed(name) if letter in self.vowels][0]
         firstVowelofSuffix = [letter for letter in suffix if letter in self.vowels][0]
-        return ((lastVowelOfName in self.frontvowels) or isFrontVowel) == (firstVowelofSuffix in self.frontvowels)
+        return (((lastVowelOfName in self.frontvowels) or isFrontVowel) == (firstVowelofSuffix in self.frontvowels)
+                and ((lastVowelOfName in self.roundedvowels) == (firstVowelofSuffix in self.roundedvowels)))
     def _surfacetolex(self, suffix):
         """Turns given suffix to lex form"""
         translate_table = [('ae','A'),(u'ıiuü','H')]
