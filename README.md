@@ -51,9 +51,9 @@ I will explain only *digerleri (others) dictionary* which is the only one develo
 
 With this line, the library will consider *server* as *sörvır* from now on. Consequently, locative case of "server" will be *server'da* instead of *server'de*.  
 
- Abbreviations should be put in *digerleri dictionary* as well. Nevertheless, unlike first example, putting *abd -> abede* is redundant because if you put only *"abd"*, the library will consider as abbreviation by default and it will be treated as *"abede"* (Some counter examples; "TDK -> TEDEKA", "TSK" -> "TESEKA"). 
+ Abbreviations should be put in *digerleri dictionary* as well. Nevertheless, unlike first example, putting *abd -> abede* is redundant because if you put only *"abd"* to the dictionary, the library will consider as abbreviation by default and it will be treated as *"abede"* (Some counter examples; "TDK -> TEDEKA", "cm -> santimetre"). 
 ## Functions 
-One key note is that you should pass name variable as **unicode** type. Also, *Apostrophe* variable is a booelan variable to determine whether there will be apostrophe between word and suffix or not. 
+One key note is that you should pass name variable as **UNICODE** type. Also, *Apostrophe* variable is a booelan variable to determine whether there will be apostrophe between word and suffix. 
   
  - **makeAccusative(name,apostrophe)**
  - **makeDative(name,apostrophe)**
