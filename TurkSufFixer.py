@@ -9,7 +9,7 @@ class Suffixes:
     INS = "lA"
     PLU = "lAr"
 
-class Suffix:
+class SufFixer:
     suffixes = ['H','A','DA','DAn','lA','lAr']
     vowels = u'aıuoeiüö'
     backvowels = vowels[:4]
