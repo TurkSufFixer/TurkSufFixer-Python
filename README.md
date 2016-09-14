@@ -27,23 +27,25 @@ There is no external dependencies.
  - Numbers
  - Exceptional words (i.e. alkol, gol)
  - Words that has â, û, ô letters
- - Words that go under vowel ellipsis
  - Foreign originated words (only valid for words that in others dictionary, see Dictionaries section)
- - Nouns that follow consonant harmony (i.e. “Çalışma Bakanlığı”)
- - Words that has irregular third person singular form (i.e. “sanayii”)
+ - Words that go under vowel ellipsis*
+ - Nouns that follow consonant harmony (i.e. “Çalışma Bakanlığı”)*
+ - Words that have irregular third person singular form (i.e. “sanayii”)*
  - Abbreviations
+ - Superscripts *("²" as "kare", "³" as "küp")*
 
  Followings are **not** in the scope:
 
  - Nouns with “cik”, “lik” “ci” suffixes (Words that already in dictionary is
-excluded)
+excluded)*
  - Nouns that already in accusative, dative, locative or ablative case (because no morphological analysis)
- - Nouns that ends with punctuation mark (This causes undefined behavior)
+ - Nouns that end with punctuation mark (This causes undefined behavior)
  - Compound nouns that are formed with 3 words*
  - Nouns that contains “ki” suffix
  - Nouns that ends with consonant which repeat itself before certain
    suffixes (i.e. şık+ı -> şıkkı)
 
+\*(Only problomatic if the noun is in possesive form)
 ## Dictionaries
 
 There are 5 dictionaries in the implementation. Here are some properties that valid for all dictionaries:
