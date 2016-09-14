@@ -162,11 +162,8 @@ class SufFixer:
         wordNumber = len(split)
         name = turkishLower(split[-1])
         # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
-        # TODO: eğer iki versiyon yaparsan bunu notlarına ekle
-        # TODO: C++ ve ruby'de yaz
-
-        if ((rawsuffix != Suffixes.INS and rawsuffix != Suffixes.PLU) and name[-1] in self.H and
-        (wordNumber > 1 or name not in self.dictionary) and (name in self.possessive or self._checkCompoundNoun(name))):
+        if (name[-1] in self.H and (rawsuffix != Suffixes.INS and rawsuffix != Suffixes.PLU) and
+           (wordNumber > 1 or name not in self.dictionary) and (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
         elif name[-1] in "0123456789":
             name = self._readNumber(name)  # if last character of string contains number then take it whole string as number and read it
@@ -204,8 +201,8 @@ class SufFixer:
                 suffix = suffix.replace('D','d')
         # and finally add buffer letter, if we added n buffer letter before this code will be discarded
         # for instrumental case, it will add "y" if name ends with vowel
-        if ((name[-1] in self.vowels and suffix[0] in self.vowels)
-            or (rawsuffix == Suffixes.INS and name[-1] in self.vowels)):
+        if ((name[-1] in self.vowels and
+		   (suffix[0] in self.vowels) or (rawsuffix == Suffixes.INS))):
             suffix = 'y' + suffix
 
         return suffix
@@ -257,7 +254,7 @@ def _turkishtoupper(char):
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        ekle = Suffix()
+        ekle = SufFixer()
         name = unicode(sys.argv[1].decode('utf8'))
         if len(sys.argv) == 2:
             for sf in ekle.suffixes:
