@@ -28,7 +28,7 @@ There is no external dependencies.
 
 ## Coverage of Library
   
- Followings are covered:
+Followings are covered:
  
  - Nouns (Proper Nouns; City, Country, Town names; Compound Nouns)
  - Numbers
@@ -40,7 +40,7 @@ There is no external dependencies.
  - Abbreviations
  - Superscripts *("²" as "kare", "³" as "küp")*
 
- Followings are **not** covered:
+Followings are **not** covered:
 
  - Nouns with “cik”, “lik” “ci” suffixes (Words that already in dictionary is
 excluded)*
