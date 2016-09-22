@@ -1,13 +1,17 @@
 ![headline](http://i.hizliresim.com/lEbkol.png)
 
-_Turk**Suf**Fixer_ is a Python (v2.7) library for creating Turkish dynamic messages. Turkish language has very complex morphological structure and many rules. Thus, it is hard to generate dynamic messages like "location + DA" because "DA" (Locative suffix) can be "de", "te", "ta", "nde" or "nda"  with respect to vowels and consonants in the noun. Our library handles these problems:
+_Turk**Suf**Fixer_ is a Python (v2.7) library for creating Turkish dynamic messages. Turkish language has a very complex derivational and inflectional morphology. Thus, it is hard to generate dynamic messages like "location + DA" because "DA" (Locative suffix) can be "de", "te", "ta", "nde" or "nda"  with respect to vowels and consonants in the noun (vowel harmnoy rule). This library handles these problems:
 
  - **Simplest way possible:** No morphological analysis, no finite state machine stuff
  - **No installation:** You don't need install anything, just take and use it
 
-We support *"Accusative", "Dative", "Locative" or "Ablative"* cases. We are not making morphological analysis so that sometimes it is not possible to find correct form of suffix. Although it is rare to encounter this condition, we mentioned what it is in the scope of library and what not in further sections.  
+We support *"Accusative", "Dative", "Locative" or "Ablative"* cases. Since no morphological analysis is done, sometimes it is not possible to find correct form of suffix. Although it is rare to encounter this condition, we mentioned what it is in the scope of library and what not in further sections.  
 
-## Examples
+## Some Problematic Examples
+
+
+
+## Example Usage
 
 ```py
 #-*- coding: UTF-8 -*-
@@ -22,19 +26,21 @@ print sfxr.makeAblative(city, apostrophe = False) + " geliyorum."
 ## Dependencies
 There is no external dependencies.
 
-## Scope of Library
+## Coverage of Library
+  
+ Followings are covered:
+ 
  - Nouns (Proper Nouns; City, Country, Town names; Compound Nouns)
  - Numbers
- - Exceptional words (i.e. alkol, gol)
- - Words that has â, û, ô letters
+ - Exceptional words (i.e. alkol, santral) handling
  - Foreign originated words (only valid for words that in others dictionary, see Dictionaries section)
- - Words that go under vowel ellipsis*
+ - Words that go under vowel ellipsis* (i.e. "omuz")
  - Nouns that follow consonant harmony (i.e. “Çalışma Bakanlığı”)*
  - Words that have irregular third person singular form (i.e. “sanayii”)*
  - Abbreviations
  - Superscripts *("²" as "kare", "³" as "küp")*
 
- Followings are **not** in the scope:
+ Followings are **not** covered:
 
  - Nouns with “cik”, “lik” “ci” suffixes (Words that already in dictionary is
 excluded)*
@@ -73,10 +79,10 @@ One key note is that you should pass *name* variable as **UNICODE** type. Also, 
  - **makeDative(name,apostrophe)**
  - **makeLocative(name,apostrophe)**
  - **makeAblative(name,apostrophe)**
- - **makeInstrumental(name,apostrophe)** *(not well supported)*
- - **makePlural(name,apostrophe)** *(not well supported)*
+ - **makeInstrumental(name,apostrophe)** *(limited functionality)*
+ - **makePlural(name,apostrophe)** *(limited functionality)*
 
-There is one more function: **getSuffix**. We do not recommend to use this function in your code. However, only the suffix sometimes might be needed. In that case, you can use this function by looking its use in *constructName* function.
+There is one more function: **getSuffix**. We do not recommend to use this function in your code. However, in case you need the surface form (processed final form) the suffix only, you can use this function (check for *constructName* function for sample usage).
 
 
 ## Test
