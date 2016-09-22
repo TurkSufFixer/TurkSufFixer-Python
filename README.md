@@ -65,6 +65,14 @@ One key note is that you should pass *name* variable as **UNICODE** type. Also, 
 
 There is one more function: **getSuffix**. We do not recommend to use this function in your code. However, in case you need the surface form (processed final form) the suffix only, you can use this function (check for *constructName* function for sample usage).
 
+## Test
+
+To run test (in main directory):
+
+> python -m tests/test
+
+You can add *-v* parameter for more verbose output. Additionally, you can add more test cases to testing operation by simply editing txt files in the *tests* folder.
+
 ## Dictionaries
 
 There are 5 dictionaries in the implementation. Here are some properties that valid for all dictionaries:
@@ -86,14 +94,6 @@ With this line, the library will consider *server* as *sörvır* from now on. Co
 
  Abbreviations should be put in *digerleri dictionary* as well. Nevertheless, unlike first example, putting *abd -> abede* is redundant because if you put only *"abd"* to the dictionary, the library will consider as abbreviation by default and it will be treated as *"abede"* (Some counter examples; "TDK -> TEDEKA", "cm -> santimetre").
 
-
-## Test
-
-To run test (in main directory):
-
-> python -m tests/test
-
-You can add *-v* parameter for more verbose output. Additionally, you can add more test cases to testing operation by simply editing txt files in the *tests* folder.
 ## License
 This project is published under MIT license. Please do not forget to give credit in your project if you use this library. If you would like, we would love to publish the names of projects that use this library.  
 ## More...
