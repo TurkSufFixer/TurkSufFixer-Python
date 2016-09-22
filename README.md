@@ -51,7 +51,7 @@ excluded)*
  - Nouns that ends with consonant which repeat itself before certain
    suffixes (i.e. şık+ı -> şıkkı)
 
-\*(Only problomatic if the noun is in possesive form)
+\*(Only problematic if the noun is in possesive form)
 
 ## Functions
 One key note is that you should pass *name* variable as **UNICODE** type. Also, *Apostrophe* variable is a boolean variable to determine whether there will be apostrophe between word and suffix.
