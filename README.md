@@ -52,6 +52,19 @@ excluded)*
    suffixes (i.e. şık+ı -> şıkkı)
 
 \*(Only problomatic if the noun is in possesive form)
+
+## Functions
+One key note is that you should pass *name* variable as **UNICODE** type. Also, *Apostrophe* variable is a boolean variable to determine whether there will be apostrophe between word and suffix.
+
+ - **makeAccusative(name,apostrophe)**
+ - **makeDative(name,apostrophe)**
+ - **makeLocative(name,apostrophe)**
+ - **makeAblative(name,apostrophe)**
+ - **makeInstrumental(name,apostrophe)** *(limited functionality)*
+ - **makePlural(name,apostrophe)** *(limited functionality)*
+
+There is one more function: **getSuffix**. We do not recommend to use this function in your code. However, in case you need the surface form (processed final form) the suffix only, you can use this function (check for *constructName* function for sample usage).
+
 ## Dictionaries
 
 There are 5 dictionaries in the implementation. Here are some properties that valid for all dictionaries:
@@ -72,17 +85,6 @@ We will explain only *digerleri (others) dictionary* which is the only one devel
 With this line, the library will consider *server* as *sörvır* from now on. Consequently, locative case of "server" will be *server'da* instead of *server'de*.  
 
  Abbreviations should be put in *digerleri dictionary* as well. Nevertheless, unlike first example, putting *abd -> abede* is redundant because if you put only *"abd"* to the dictionary, the library will consider as abbreviation by default and it will be treated as *"abede"* (Some counter examples; "TDK -> TEDEKA", "cm -> santimetre").
-## Functions
-One key note is that you should pass *name* variable as **UNICODE** type. Also, *Apostrophe* variable is a boolean variable to determine whether there will be apostrophe between word and suffix.
-
- - **makeAccusative(name,apostrophe)**
- - **makeDative(name,apostrophe)**
- - **makeLocative(name,apostrophe)**
- - **makeAblative(name,apostrophe)**
- - **makeInstrumental(name,apostrophe)** *(limited functionality)*
- - **makePlural(name,apostrophe)** *(limited functionality)*
-
-There is one more function: **getSuffix**. We do not recommend to use this function in your code. However, in case you need the surface form (processed final form) the suffix only, you can use this function (check for *constructName* function for sample usage).
 
 
 ## Test
