@@ -1,6 +1,6 @@
 ![headline](http://i.hizliresim.com/lEbkol.png)
 
-_Turk**Suf**Fixer_ is a Python (v2.7) library for creating Turkish dynamic messages. Turkish language has a very complex derivational and inflectional morphology. Thus, it is hard to generate dynamic messages like "location + DA" because "DA" (Locative suffix) can be "de", "te", "ta", "nde" or "nda"  with respect to vowels and consonants in the noun (vowel harmnoy rule). This library handles these problems:
+_Turk**Suf**Fixer_ is a Python (v2.7) library for creating Turkish dynamic messages. Turkish language has a very complex derivational and inflectional morphology. Thus, it is hard to generate dynamic messages like "location + DA" because "DA" (Locative suffix) can be "de", "te", "ta", "nde" or "nda"  with respect to vowels and consonants in the noun (vowel harmony rule). This library handles these problems:
 
  - **Simplest way possible:** No morphological analysis, no finite state machine stuff
  - **No installation:** You don't need install anything, just take and use it
@@ -25,9 +25,9 @@ print sfxr.makeAblative(city, apostrophe = False) + " geliyorum."
 There is no external dependencies.
 
 ## Coverage of Library
-  
+
 Followings are covered:
- 
+
  - Nouns (Proper Nouns; City, Country, Town names; Compound Nouns)
  - Numbers
  - Exceptional words (i.e. alkol, santral) handling
@@ -49,7 +49,7 @@ excluded)*
  - Nouns that ends with consonant which repeat itself before certain
    suffixes (i.e. şık+ı -> şıkkı)
 
-\*(Only problematic if the noun is in possesive form)
+\*(Only problematic if the noun is in possessive form)
 
 ## Functions
 One key note is that you should pass *name* variable as **UNICODE** type. Also, *Apostrophe* variable is a boolean variable to determine whether there will be apostrophe between word and suffix.
@@ -84,7 +84,7 @@ There are 5 dictionaries in the implementation. Here are some properties that va
 
 We will explain only *digerleri (others) dictionary* which is the only one developer should make changes, other dictionaries shouldn't be changed generally (if there is an error in a dictionary please report).
 
-*digerleri dictionary* is created for especially foreign words and some abbreviations. If a word is not pronounced as written, we need to put that word and its Turkish pronounciation into the *digerleri dictionary*. For example, we use the word "server" in Turkish but we don't write it as "sörvır". Therefore, to preserve vowel harmony we need to tell to the library how to treat the word. In this case, we should put this line into the dictionary:
+*digerleri dictionary* is created for especially foreign words and some abbreviations. If a word is not pronounced as written, we need to put that word and its Turkish pronunciation into the *digerleri dictionary*. For example, we use the word "server" in Turkish but we don't write it as "sörvır". Therefore, to preserve vowel harmony we need to tell to the library how to treat the word. In this case, we should put this line into the dictionary:
 
 > server -> sörvır
 
