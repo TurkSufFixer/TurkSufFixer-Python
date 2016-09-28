@@ -8,9 +8,7 @@ _Turk**Suf**Fixer_ is a Python (v2.7) library for creating Turkish dynamic messa
 We support *"Accusative", "Dative", "Locative" or "Ablative"* cases. Since no morphological analysis is done, sometimes it is not possible to find correct form of suffix. Although it is rare to encounter this condition, we mentioned what it is in the scope of library and what not in further sections.  
 
 ## Some Problematic Examples
-
-
-
+![examples](http://i.hizliresim.com/D3WOk3.png)
 ## Example Usage
 
 ```py
