@@ -32,7 +32,7 @@ Followings are covered:
  - Numbers
  - Exceptional words (i.e. alkol, santral) handling
  - Foreign originated words (only valid for words that in others dictionary, see Dictionaries section)
- - Words that go under vowel ellipsis* (i.e. "omuz")
+ - Words that go under vowel ellipsis* (i.e. "omuz")*
  - Nouns that follow consonant harmony (i.e. “Çalışma Bakanlığı”)*
  - Words that have irregular third person singular form (i.e. “sanayii”)*
  - Abbreviations
