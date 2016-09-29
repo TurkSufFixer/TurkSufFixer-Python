@@ -32,7 +32,7 @@ Followings are covered:
  - Numbers
  - Exceptional words (i.e. alkol, santral) handling
  - Foreign originated words (only valid for words that in others dictionary, see Dictionaries section)
- - Words that go under vowel ellipsis* (i.e. "omuz")*
+ - Words that go under vowel ellipsis (i.e. "omuz")*
  - Nouns that follow consonant harmony (i.e. “Çalışma Bakanlığı”)*
  - Words that have irregular third person singular form (i.e. “sanayii”)*
  - Abbreviations
@@ -96,4 +96,8 @@ With this line, the library will consider *server* as *sörvır* from now on. Co
 This project is published under MIT license. Please do not forget to give credit in your project if you use this library. If you would like, we would love to publish the names of projects that use this library.  
 ## More...
 
-We will put other implementations of this library in several other programming languages.
+Other implementations:
+
+- [C# Implementation](https://github.com/TurkSufFixer/TurkSufFixer-Csharp)
+- [Java Implementation](https://github.com/TurkSufFixer/TurkSufFixer-Java)
+- [PHP Implementation](https://github.com/TurkSufFixer/TurkSufFixer-PHP)
