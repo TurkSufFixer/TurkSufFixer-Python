@@ -19,6 +19,7 @@ class ValueTest(unittest.TestCase):
                      ('possesive', self.possesive),
                      ('others',    self.others)
                      ]
+        self.possessive_content = file("sozluk/iyelik.txt").read()
         for filename,namelist in test_list:
             with io.open('tests/' + filename,'r',encoding='utf8') as infile:
                 for line in [x for x in infile if not x.strip().startswith('#')]:
@@ -46,11 +47,7 @@ class ValueTest(unittest.TestCase):
             for sf, correctsf in zip(suffix,suffixes):
                 rt = ekle.getSuffix(name,sf)
                 self.assertEqual(correctsf.strip(), rt, u"'{}' için '{}' dönmesi gerekirken '{}' döndü.".format(name,correctsf,rt).encode('utf8'))
-
+    def tearDown(self):
+        file("sozluk/iyelik.txt","w").write(self.possessive_content);
 if __name__ == '__main__':
-    print
-    print "+------------------------------------------------------+"
-    print "|UYARI! Unutma bundan sonra i'hali ön belleğe alınıyor!|"
-    print "+------------------------------------------------------+"
-    print
     unittest.main()
