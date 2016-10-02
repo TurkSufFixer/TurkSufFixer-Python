@@ -8,9 +8,11 @@ class Suffixes:
     ABL = "DAn"
     INS = "lA"
     PLU = "lAr"
+    GEN = "Hn"
 
 class SufFixer:
-    suffixes = ['H','A','DA','DAn','lA','lAr']
+    suffixes = [Suffixes.ACC,Suffixes.DAT,Suffixes.LOC,Suffixes.ABL,
+                Suffixes.INS,Suffixes.PLU,Suffixes.GEN]
     vowels = u'aıuoeiüö'
     backvowels = vowels[:4]
     frontvowels = vowels[4:]
@@ -141,6 +143,8 @@ class SufFixer:
         return self.constructName(name,Suffixes.LOC,apostrophe)
     def makeAblative(self, name, apostrophe=True):
         return self.constructName(name,Suffixes.ABL,apostrophe)
+    def makeGenitive(self, name, apostrophe=True):
+        return self.constructName(name,Suffixes.GEN,apostrophe)
     def makeInstrumental(self, name, apostrophe=True):
         return self.constructName(name,Suffixes.INS,apostrophe)
     def makePlural(self, name, apostrophe=True):
@@ -162,7 +166,7 @@ class SufFixer:
         wordNumber = len(split)
         name = turkishLower(split[-1])
         # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
-        if (name[-1] in self.H and (rawsuffix != Suffixes.INS and rawsuffix != Suffixes.PLU) and
+        if (name[-1] in self.H and rawsuffix[0] != "l" and
            (wordNumber > 1 or name not in self.dictionary) and (name in self.possessive or self._checkCompoundNoun(name))):
                 suffix = 'n' + suffix
         elif name[-1] in "0123456789":
@@ -182,13 +186,15 @@ class SufFixer:
             lastVowel = 'e'
             name = name + 'e'
 
-        if suffix[-1] == 'H':
+        if 'H' in suffix:
             replacement = ( u'ü' if lastVowel in self.frontrounded   or (soft and lastVowel in self.backrounded)   else
                             u'i' if lastVowel in self.frontunrounded or (soft and lastVowel in self.backunrounded) else
                             u'u' if lastVowel in self.backrounded   else
                             u'ı'
                             )
             suffix = suffix.replace('H', replacement)
+            if  suffix[0] != 'n'  and rawsuffix == Suffixes.GEN and name[-1] in self.vowels:
+                suffix = 'n' + suffix
         else:
             if lastVowel in self.frontvowels or soft:
                 suffix = suffix.replace('A', 'e')
