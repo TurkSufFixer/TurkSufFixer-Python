@@ -2,4 +2,5 @@ cm -> santimetre
 servEr -> sÖrvır
 ITÜ -> itü
 ABD
+TSK
 cm² -> kare

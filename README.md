@@ -92,7 +92,7 @@ We will explain only *digerleri (others) dictionary* which is the only one devel
 
 With this line, the library will consider *server* as *sörvır* from now on. Consequently, locative case of "server" will be *server'da* instead of *server'de*.  
 
- Abbreviations should be put in *digerleri dictionary* as well. Nevertheless, unlike first example, putting *abd -> abede* is redundant because if you put only *"abd"* to the dictionary, the library will consider as abbreviation by default and it will be treated as *"abede"* (Some counter examples; "TDK -> TEDEKA", "cm -> santimetre").
+ Abbreviations should be put in *digerleri dictionary* as well. Nevertheless, unlike first example, inserting *abd -> abede* or *tdk -> tedeka* into the dictionary is redundant because if you put *"abd"* or *"tdk"* to the dictionary without indicating its pronunciation, the library will consider them as abbreviation by default and they will be treated as *"abede"* or *"tedeka"* in evaluation (Some counter examples; "kg -> kilogram "cm -> santimetre").
 
 ## License
 This project is published under MIT license. Please do not forget to give credit in your project if you use this library. If you would like, we would love to publish the names of projects that use this library.  

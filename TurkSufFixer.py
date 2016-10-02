@@ -48,7 +48,7 @@ class SufFixer:
                          l = turkishLower(line.strip())
                          ret = pattern.search(l)
                          if ret == None:
-                             self.others[l] = l + 'e'
+                             self.others[l] = l + ('a' if l.endswith('k') else 'e')
                          else:
                              self.others[ret.group('abbr')] = ret.group('eqv')
                      self.dictionary |= self.others.viewkeys()
@@ -183,8 +183,8 @@ class SufFixer:
         try:
             lastVowel = next(vowels)
         except StopIteration:
-            lastVowel = 'e'
-            name = name + 'e'
+            lastVowel = 'a' if name.endswith('k') else 'e'
+            name = name + lastVowel
 
         if 'H' in suffix:
             replacement = ( u'ü' if lastVowel in self.frontrounded   or (soft and lastVowel in self.backrounded)   else
