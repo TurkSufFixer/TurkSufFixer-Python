@@ -193,7 +193,7 @@ class SufFixer:
                             u'ı'
                             )
             suffix = suffix.replace('H', replacement)
-            if  suffix[0] != 'n'  and rawsuffix == Suffixes.GEN and name[-1] in self.vowels:
+            if  rawsuffix == Suffixes.GEN and suffix[0] != 'n' and name[-1] in self.vowels:
                 suffix = 'n' + suffix
         else:
             if lastVowel in self.frontvowels or soft:
@@ -207,8 +207,8 @@ class SufFixer:
                 suffix = suffix.replace('D','d')
         # and finally add buffer letter, if we added n buffer letter before this code will be discarded
         # for instrumental case, it will add "y" if name ends with vowel
-        if ((name[-1] in self.vowels and
-		   (suffix[0] in self.vowels) or (rawsuffix == Suffixes.INS))):
+        if (name[-1] in self.vowels and
+		   ((suffix[0] in self.vowels) or (rawsuffix == Suffixes.INS))):
             suffix = 'y' + suffix
 
         return suffix
@@ -234,8 +234,8 @@ class DictionaryNotFound(Exception):
 # Letters with circumflex will fail if you use this table
 # All letters with circumflex (şapkalı) will translated to correspondence front vowels
 
-lcase_table = u'abcçdefgğhıijklmnoöprsştuüvyz' + u'eeüüöö\xC2\xE2\xDB\xFB\xD4\xF4'
-ucase_table = u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ' + u'\xC2\xE2\xDB\xFB\xD4\xF4EEÜÜÖÖ'
+lcase_table = u'abcçdefgğhıijklmnoöprsştuüvyz' + u'eeiiüüöö\xC2\xE2\xDB\xFB\xD4\xF4'
+ucase_table = u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ' + u'\xC2\xE2\xCE\xEE\xDB\xFB\xD4\xF4EEÜÜÖÖ'
 
 def turkishLower(data):
     return ''.join(map(_turkishtolower, data))
