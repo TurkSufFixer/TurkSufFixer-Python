@@ -16,4 +16,7 @@ ciğer51 = {i,e,de,den}
 aa00    = {ı,a,da,dan}
 50000000000       = {ı,a,da,dan}
 50000000000000000 = {u,a,da,dan} 
-
+10:00             = {u,a,da,dan}
+10.00		  = {u,a,da,dan}
+04:00	          = {ü,e,te,ten}
+04.00             = {ü,e,te,ten}

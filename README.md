@@ -30,7 +30,7 @@ There is no external dependencies.
 Followings are covered:
 
  - Nouns (Proper Nouns; City, Country, Town names; Compound Nouns)
- - Numbers
+ - Numbers (includes time and dates)
  - Exceptional words (i.e. alkol, santral) handling
  - Foreign originated words (only valid for words that in others dictionary, see Dictionaries section)
  - Words that go under vowel ellipsis (i.e. "omuz")*
