@@ -21,7 +21,7 @@ print sfxr.makeDative(city) + " gidiyorum."
 print sfxr.makeAblative(city, apostrophe = False) + " geliyorum."
 ```
 ![Some Examples](http://i.hizliresim.com/lEWrzl.png)
-![More Examples](http://i.hizliresim.com/nEo55R.png)
+![More Examples](http://i.hizliresim.com/RQ2z1o.png)
 ## Dependencies
 There is no external dependencies.
 
