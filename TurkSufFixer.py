@@ -121,7 +121,7 @@ class SufFixer:
         return suffix
     def _checkCompoundNoun(self, name):
         """Checks if given name is a compound noun or not"""
-        probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1)}
+        probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1) if len(name[:i]) > 0}
         possessivesuff = {'lArH','H','yH','sH'}
         for posssuff in probablesuff.viewkeys() & possessivesuff: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
             wordpairs = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
@@ -150,7 +150,7 @@ class SufFixer:
     def makePlural(self, name, apostrophe=True):
         return self.constructName(name,Suffixes.PLU,apostrophe)
     def constructName(self, name, suffix, apostrophe=True):
-        return u"{name}{aps}{suffix}".format(name=name,aps= "'" if apostrophe else "", suffix=self.getSuffix(name,suffix))
+        return u"{name}{aps}{suffix}".format(name=name.strip(),aps= "'" if apostrophe else "", suffix=self.getSuffix(name,suffix))
     def getSuffix(self, name, suffix):
         """Adds suffix to given name"""
         name = name.strip()
