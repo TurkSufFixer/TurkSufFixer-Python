@@ -62,10 +62,10 @@ class SufFixer:
                 1993    -> üç
                 bordo61 -> bir
         """
-        time1 = number.find(":")
-        time2 = number.find(".")
+        time1 = number.rfind(":")
+        time2 = number.rfind(".")
         time = time1 if time1 != -1 else time2
-        if time != -1 and all("0" == c for c in number[time+1:]):
+        if time != -1 and len(number) == 5 and number[time+1:] == "00":
             number = number[:time]
         for i, letter in [(i,letter) for i,letter in enumerate(reversed(number))
                           if letter != u'0' and letter.isnumeric()]:
