@@ -263,14 +263,25 @@ def _turkishtoupper(char):
 
 
 if __name__ == '__main__':
-    import sys
-    if len(sys.argv) > 1:
-        ekle = SufFixer()
-        name = unicode(sys.argv[1].decode('utf8'))
-        if len(sys.argv) == 2:
-            for sf in ekle.suffixes:
-                ek = ekle.getSuffix(name,sf)
-                print "{name}'{suffix}".format(name=name.encode('utf8'),suffix=ek.encode('utf8'))
-        elif len(sys.argv) == 3:
-            ek = ekle.getSuffix(name,sys.argv[2])
-            print "{name}'{suffix}".format(name=name.encode('utf8'),suffix=ek.encode('utf8'))
+    import argparse
+    parser = argparse.ArgumentParser(prog = "TurkSufFixer", \
+                                     description = "If you give any parameter, the program prints all the noun cases")
+    parser.add_argument("word", help = "Input word")
+    parser.add_argument("-a", "--acc", action = "store_true", help = "Print Accusative Case")
+    parser.add_argument("-d", "--dat", action = "store_true", help = "Print Dative Case")
+    parser.add_argument("-l", "--loc", action = "store_true", help = "Print Locative Case")
+    parser.add_argument("-b", "--abl", action = "store_true", help = "Print Ablative Case")
+    parser.add_argument("-g", "--gen", action = "store_true", help = "Print Genitive Case")
+    parser.add_argument("-i", "--ins", action = "store_true", help = "Print Instrumental Case")
+    parser.add_argument("-p", "--plu", action = "store_true", help = "Print Plural Case")
+    parser.add_argument("-n", "--noapostrophe", action = "store_true", help = "Don't put apostrophe between the word and suffix")
+    args = parser.parse_args()
+    parse_list = [args.acc,args.dat,args.loc,args.abl,args.ins,args.plu,args.gen]
+    if not any(parse_list): parse_list = [True for _ in range(1,len(parse_list))]
+    cmd_suffix = zip(parse_list, SufFixer.suffixes)
+    noapostrophe = args.noapostrophe
+    sfx = SufFixer()
+    name = unicode(args.word)
+    for cond, suff in cmd_suffix:
+        if cond:
+            print u"{}{}{}".format(name, "" if noapostrophe else "'", sfx.getSuffix(name,suff))
