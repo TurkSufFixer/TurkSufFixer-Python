@@ -265,7 +265,7 @@ def _turkishtoupper(char):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(prog = "TurkSufFixer", \
-                                     description = "If you give any parameter, the program prints all the noun cases")
+                                     description = "If you don't give any parameter, the program prints all the noun cases.")
     parser.add_argument("word", help = "Input word")
     parser.add_argument("-a", "--acc", action = "store_true", help = "Print Accusative Case")
     parser.add_argument("-d", "--dat", action = "store_true", help = "Print Dative Case")
@@ -274,14 +274,17 @@ if __name__ == '__main__':
     parser.add_argument("-g", "--gen", action = "store_true", help = "Print Genitive Case")
     parser.add_argument("-i", "--ins", action = "store_true", help = "Print Instrumental Case")
     parser.add_argument("-p", "--plu", action = "store_true", help = "Print Plural Case")
+    parser.add_argument("-s", "--getSuffix", action = "store_true", help = "Print suffixes without input word")
     parser.add_argument("-n", "--noapostrophe", action = "store_true", help = "Don't put apostrophe between the word and suffix")
     args = parser.parse_args()
     parse_list = [args.acc,args.dat,args.loc,args.abl,args.ins,args.plu,args.gen]
-    if not any(parse_list): parse_list = [True for _ in range(1,len(parse_list))]
+    if not any(parse_list): parse_list = [True for _, _ in enumerate(parse_list)]
     cmd_suffix = zip(parse_list, SufFixer.suffixes)
     noapostrophe = args.noapostrophe
     sfx = SufFixer()
     name = unicode(args.word)
-    for cond, suff in cmd_suffix:
-        if cond:
+    for cond, suff in [(cond, suff) for cond, suff in cmd_suffix if cond]:
+        if args.getSuffix:
+            print sfx.getSuffix(name,suff)
+        else:
             print u"{}{}{}".format(name, "" if noapostrophe else "'", sfx.getSuffix(name,suff))
