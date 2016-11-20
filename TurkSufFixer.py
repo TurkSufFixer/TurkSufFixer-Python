@@ -264,9 +264,12 @@ def _turkishtoupper(char):
 
 if __name__ == '__main__':
     import argparse
+    import sys
     parser = argparse.ArgumentParser(prog = "TurkSufFixer", \
                                      description = "If you don't give any parameter, the program prints all the noun cases.")
-    parser.add_argument("word", help = "Input word")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("word", nargs = '?',help = "Input word")
+    group.add_argument('infile', nargs = '?', type=argparse.FileType('r'), default=sys.stdin, help = "Default is the standart input")
     parser.add_argument("-a", "--acc", action = "store_true", help = "Print Accusative Case")
     parser.add_argument("-d", "--dat", action = "store_true", help = "Print Dative Case")
     parser.add_argument("-l", "--loc", action = "store_true", help = "Print Locative Case")
@@ -281,10 +284,12 @@ if __name__ == '__main__':
     if not any(parse_list): parse_list = [True for _, _ in enumerate(parse_list)]
     cmd_suffix = zip(parse_list, SufFixer.suffixes)
     noapostrophe = args.noapostrophe
+    lines = args.infile.readlines() if args.word == None else [args.word]
     sfx = SufFixer()
-    name = unicode(args.word)
-    for cond, suff in [(cond, suff) for cond, suff in cmd_suffix if cond]:
-        if args.getSuffix:
-            print sfx.getSuffix(name,suff)
-        else:
-            print u"{}{}{}".format(name, "" if noapostrophe else "'", sfx.getSuffix(name,suff))
+    for line in lines:
+        name = line.decode("utf8").strip()
+        for cond, suff in [(cond, suff) for cond, suff in cmd_suffix if cond]:
+            if args.getSuffix:
+                print sfx.getSuffix(name,suff).encode("utf8")
+            else:
+                print u"{}{}{}".format(name, "" if noapostrophe else "'", sfx.getSuffix(name,suff)).encode("utf8")
