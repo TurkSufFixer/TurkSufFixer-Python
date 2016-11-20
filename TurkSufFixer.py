@@ -51,7 +51,6 @@ class SufFixer:
                              self.others[l] = l + ('a' if l.endswith('k') else 'e')
                          else:
                              self.others[ret.group('abbr')] = ret.group('eqv')
-                     self.dictionary |= self.others.viewkeys()
         except IOError:
             raise DictionaryNotFound
 
@@ -116,7 +115,7 @@ class SufFixer:
         lastVowelOfName = [letter for letter in reversed(name) if letter in self.vowels][0]
         firstVowelofSuffix = [letter for letter in suffix if letter in self.vowels][0]
         return (((lastVowelOfName in self.frontvowels) or isFrontVowel) == (firstVowelofSuffix in self.frontvowels)
-                and ((lastVowelOfName in self.roundedvowels) == (firstVowelofSuffix in self.roundedvowels)))
+                and (firstVowelofSuffix not in self.H or (lastVowelOfName in self.roundedvowels) == (firstVowelofSuffix in self.roundedvowels)))
     def _surfacetolex(self, suffix):
         """Turns given suffix to lex form"""
         translate_table = [('ae','A'),(u'ıiuü','H')]
