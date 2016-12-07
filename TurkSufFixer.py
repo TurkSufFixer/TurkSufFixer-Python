@@ -125,8 +125,9 @@ class SufFixer:
         return suffix
     def _checkCompoundNoun(self, name):
         """Checks if given name is a compound noun or not"""
+        if name[-4:] == u"oğlu": return True
         probablesuff = {self._surfacetolex(name[i:]):name[i:] for i in range(-1,-5,-1) if len(name[:i]) > 0}
-        possessivesuff = {'lArH','H','yH','sH'}
+        possessivesuff = {'lArH','H','yH','sH',u'lHğH'}
         for posssuff in probablesuff.viewkeys() & possessivesuff: # olabilecek ekler içinde yukardakilerin hangisi varsa dön
             wordpairs = self._divideWord(name, posssuff) # [["gümüş,"su"]] olarak dönecek
             for wordpair in wordpairs:
