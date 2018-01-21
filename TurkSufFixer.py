@@ -148,7 +148,7 @@ class SufFixer:
         isFrontVowel = False
         if name in self.exceptions:
             isFrontVowel = True
-        lastVowelOfName = [letter for letter in reversed(name) if letter in self.vowels][0]
+        lastVowelOfName = [letter for letter in name[::-1] if letter in self.vowels][0]
         firstVowelofSuffix = [letter for letter in suffix if letter in self.vowels][0]
         return (((lastVowelOfName in self.frontvowels) or isFrontVowel) == (firstVowelofSuffix in self.frontvowels)
                 and (firstVowelofSuffix not in self.H or (lastVowelOfName in self.roundedvowels) == (firstVowelofSuffix in self.roundedvowels)))
@@ -238,7 +238,7 @@ class SufFixer:
         elif name[-1] in self.superscript:
             name = self.superscript[name[-1]]
 
-        vowels = (letter for letter in reversed(name) if letter in self.vowels)
+        vowels = (letter for letter in name[::-1] if letter in self.vowels)
         try:
             lastVowel = next(vowels)
         except StopIteration:
