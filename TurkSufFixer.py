@@ -224,8 +224,11 @@ class SufFixer:
         wordNumber = len(split)
         name = turkishLower(split[-1])
         # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
+        # if the raw suffix doesn't start with 'l' letter which means
+        # the suffix is not plural or instrumental. So we can add 'n' buffer letter if appropiate
         if (name[-1] in self.H and rawsuffix[0] != "l" and
-                (wordNumber > 1 or name not in self.dictionary) and (name in self.possessive or self._checkCompoundNoun(name))):
+                (wordNumber > 1 or name not in self.dictionary) and
+                (name in self.possessive or self._checkCompoundNoun(name))):
             suffix = 'n' + suffix
         elif name[-1] in "0123456789":
             # if last character of string contains number then take it whole string as
@@ -247,11 +250,19 @@ class SufFixer:
             name = name + lastVowel
 
         if 'H' in suffix:
-            replacement = (u'ü' if lastVowel in self.frontrounded or (soft and lastVowel in self.backrounded) else
-                           u'i' if lastVowel in self.frontunrounded or (soft and lastVowel in self.backunrounded) else
-                           u'u' if lastVowel in self.backrounded else
-                           u'ı'
+            # if the given name is not soft and it ends with backvowels
+            # we can replace H with appropiate surface form
+            # however on the 3rd line we use rounded vowels
+            # the reason behind that we check whether the last vowel is back vowel
+            # or the given name is not soft. Therefore, we left with the last vowel
+            # can be front vowels or name can be soft. To determine 'H' surf form,
+            # we only need to lookup the last vowels roundness.
+            replacement = (u'u' if not soft and lastVowel in self.backrounded else
+                           u'ı' if not soft and lastVowel in self.backunrounded else
+                           u'ü' if lastVowel in self.roundedvowels else
+                           u'i'
                            )
+
             suffix = suffix.replace('H', replacement)
         else:
             if lastVowel in self.frontvowels or soft:
