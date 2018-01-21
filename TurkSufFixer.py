@@ -326,7 +326,7 @@ if __name__ == '__main__':
     import argparse
     import sys
     parser = argparse.ArgumentParser(prog="TurkSufFixer",
-                                     description="If you don't give any parameter, the program prints all the noun cases.")
+                                     description="If you don't give any parameter, the program prints all noun cases.")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("word", nargs='?', help="Input word")
     group.add_argument('infile', nargs='?', type=argparse.FileType(
@@ -346,10 +346,10 @@ if __name__ == '__main__':
     parse_list = [args.acc, args.dat, args.loc, args.abl, args.ins, args.plu, args.gen]
     if not any(parse_list):
         parse_list = [True for _, _ in enumerate(parse_list)]
-    cmd_suffix = zip(parse_list, SufFixer.suffixes)
+    sfx = SufFixer()
+    cmd_suffix = zip(parse_list, sfx.suffixes)
     noapostrophe = args.noapostrophe
     lines = args.infile.readlines() if args.word is None else [args.word]
-    sfx = SufFixer()
     for line in lines:
         name = line.decode("utf8").strip()
         for cond, suff in [(cond, suff) for cond, suff in cmd_suffix if cond]:

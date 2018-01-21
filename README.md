@@ -14,8 +14,7 @@ We support *"Accusative" (-i hali), "Dative" (-e hali), "Locative" (-de hali), "
 ```py
 #-*- coding: UTF-8 -*-
 from TurkSufFixer import SufFixer as sf
-city = raw_input("Bir şehir girin (Type a city): ")
-city = unicode(city)
+city = raw_input("Bir şehir girin (Type a city): ").decode('utf-8')
 sfxr = sf() #create the object
 print sfxr.makeDative(city) + " gidiyorum."
 print sfxr.makeAblative(city, apostrophe = False) + " geliyorum."
