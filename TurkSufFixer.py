@@ -1,9 +1,15 @@
 # -*- coding: UTF-8 -*-
 import io
 import re
+import os
 from collections import namedtuple
 
-
+MODULE_ABS_PATH = os.path.dirname(os.path.abspath(__file__))
+WORDS_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/kelimeler.txt")
+EXCEPT_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/istisnalar.txt")
+HAPL_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/unludusmesi.txt")
+POSS_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/iyelik.txt")
+OTHR_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/digerleri.txt")
 class SufFixer:
     vowels = u'aıuoeiüö'
     backvowels = vowels[:4]
@@ -41,8 +47,8 @@ class SufFixer:
     numbers = [ones, tens, digits]
     superscript = {u'\xB2': u"kare", u'\xB3': u"küp"}
 
-    def __init__(self, dictpath="sozluk/kelimeler.txt", exceptions="sozluk/istisnalar.txt",
-                 haplopath="sozluk/unludusmesi.txt", poss="sozluk/iyelik.txt", othpath="sozluk/digerleri.txt"):
+    def __init__(self, dictpath=WORDS_DICT_PATH, exceptions=EXCEPT_DICT_PATH,
+                 haplopath=HAPL_DICT_PATH, poss=POSS_DICT_PATH, othpath=OTHR_DICT_PATH):
         Suffixes = namedtuple('Suffixes', ['ACC', 'DAT', 'LOC', 'ABL', 'INS', 'PLU', 'GEN'])
         self.suffixes = Suffixes(
             ACC='H',
@@ -173,7 +179,7 @@ class SufFixer:
 
     def _checkExceptionalWord(self, name):
         """Checks if second word of compound noun is in exception lists"""
-        return any(word[-1] in self.exceptions 
+        return any(word[-1] in self.exceptions
                    for word in self._divideWord(name, "") if word[-1])
 
     def makeAccusative(self, name, apostrophe=True):
