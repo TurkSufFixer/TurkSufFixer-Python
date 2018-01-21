@@ -198,8 +198,6 @@ class SufFixer:
                             u'ı'
                             )
             suffix = suffix.replace('H', replacement)
-            if  rawsuffix == Suffixes.GEN and suffix[0] != 'n' and name[-1] in self.vowels:
-                suffix = 'n' + suffix
         else:
             if lastVowel in self.frontvowels or soft:
                 suffix = suffix.replace('A', 'e')
@@ -210,11 +208,13 @@ class SufFixer:
                 suffix = suffix.replace('D','t')
             else:
                 suffix = suffix.replace('D','d')
-        # and finally add buffer letter, if we added n buffer letter before this code will be discarded
+        # and finally add buffer letter, unless it is added previously
+        # buffer letter "y" will be added if noun ends with vowel and suffix begins with vowel 
         # for instrumental case, it will add "y" if name ends with vowel
-        if (name[-1] in self.vowels and
-		   ((suffix[0] in self.vowels) or (rawsuffix == Suffixes.INS))):
-            suffix = 'y' + suffix
+        # for genitive case, "n" will be added
+        if name[-1] in self.vowels:
+            if (suffix[0] in self.vowels) or (rawsuffix == Suffixes.INS):
+                suffix = u"{buf}{suf}".format(suf=suffix, buf = 'y' if rawsuffix != Suffixes.GEN else 'n')
 
         return suffix
 
