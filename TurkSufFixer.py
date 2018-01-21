@@ -14,15 +14,15 @@ OTHR_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/digerleri.txt")
 
 class SufFixer:
     vowels = u'aıuoeiüö'
-    backvowels = vowels[:4]
-    frontvowels = vowels[4:]
-    backunrounded = backvowels[:2]
-    backrounded = backvowels[2:]
-    frontunrounded = frontvowels[:2]
-    frontrounded = frontvowels[2:]
-    roundedvowels = u"uüoö"
-    unroundedvowels = u"aeıi"
-    hardconsonant = u'fstkçşhp'
+    b_vowels = vowels[:4]
+    f_vowels = vowels[4:]
+    b_u_vowels = b_vowels[:2]
+    b_r_vowels = b_vowels[2:]
+    f_u_vowels = f_vowels[:2]
+    f_r_vowels = f_vowels[2:]
+    r_vowels = u"uüoö"
+    u_vowels = u"aeıi"
+    hard_consonant = u'fstkçşhp'
     H = [u'ı', u'i', u'u', u'ü']
     ones = {
         '0': u'sıfır',
@@ -153,14 +153,16 @@ class SufFixer:
 
     def _checkVowelHarmony(self, name, suffix):
         """Checks vowel harmony"""
-        lastVowelOfName = ''
-        isFrontVowel = False
+        l_vowel_name = ''
+        is_f_vowel = False
         if name in self.exceptions:
-            isFrontVowel = True
-        lastVowelOfName = [letter for letter in name[::-1] if letter in self.vowels][0]
-        firstVowelofSuffix = [letter for letter in suffix if letter in self.vowels][0]
-        return (((lastVowelOfName in self.frontvowels) or isFrontVowel) == (firstVowelofSuffix in self.frontvowels)
-                and (firstVowelofSuffix not in self.H or (lastVowelOfName in self.roundedvowels) == (firstVowelofSuffix in self.roundedvowels)))
+            is_f_vowel = True
+        l_vowel_name = next(letter for letter in name[::-1] if letter in self.vowels)
+        f_vowel_sfx = next(letter for letter in suffix if letter in self.vowels)
+        # first we check for frontness ('e' follow 'eiüö')
+        # then we check for roundness because for example 'ü' can't follow 'i'
+        return (((l_vowel_name in self.f_vowels) or is_f_vowel) == (f_vowel_sfx in self.f_vowels)
+                and ((l_vowel_name in self.r_vowels) == (f_vowel_sfx in self.r_vowels)))
 
     def _surfacetolex(self, suffix):
         """Turns given suffix to lex form"""
@@ -261,20 +263,20 @@ class SufFixer:
             # or the given name is not soft. Therefore, we left with the last vowel
             # can be front vowels or name can be soft. To determine 'H' surf form,
             # we only need to lookup the last vowels roundness.
-            replacement = (u'u' if not soft and lastVowel in self.backrounded else
-                           u'ı' if not soft and lastVowel in self.backunrounded else
-                           u'ü' if lastVowel in self.roundedvowels else
+            replacement = (u'u' if not soft and lastVowel in self.b_r_vowels else
+                           u'ı' if not soft and lastVowel in self.b_u_vowels else
+                           u'ü' if lastVowel in self.r_vowels else
                            u'i'
                            )
 
             suffix = suffix.replace('H', replacement)
         else:
-            if lastVowel in self.frontvowels or soft:
+            if lastVowel in self.f_vowels or soft:
                 suffix = suffix.replace('A', 'e')
             else:
                 suffix = suffix.replace('A', 'a')
 
-            if name[-1] in self.hardconsonant:
+            if name[-1] in self.hard_consonant:
                 suffix = suffix.replace('D', 't')
             else:
                 suffix = suffix.replace('D', 'd')
