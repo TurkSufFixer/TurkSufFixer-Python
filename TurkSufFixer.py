@@ -60,6 +60,7 @@ class SufFixer:
             INS='lA',
             PLU='lAr',
             GEN='Hn')
+        self.s_h_pairs = [(u'ğ', u'k'), (u'g', u'k'), (u'b', u'p'), (u'c', u'ç'), (u'd', u't')]
         self.updated = set()
         self.possfile = io.open(poss, "r+", encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
@@ -144,8 +145,11 @@ class SufFixer:
 
     def _checkConsonantHarmony(self, name, suffix):
         """Checks consonant harmony rule """
-        return suffix == 'H' and any(name.endswith(lastletter) and (name[:-1] + replacement) in self.dictionary
-                                     for lastletter, replacement in [(u'ğ', u'k'), (u'g', u'k'), (u'b', u'p'), (u'c', u'ç'), (u'd', u't')])
+        if suffix == 'H':
+            for lastletter, replacement in self.s_h_pairs:
+                if name.endswith(lastletter) and (name[:-1] + replacement) in self.dictionary:
+                    return True
+        return False
 
     def _checkVowelHarmony(self, name, suffix):
         """Checks vowel harmony"""
@@ -307,13 +311,16 @@ class NotValidString(Exception):
 class DictionaryNotFound(Exception):
     pass
 
+
 lcase_table = u'abcçdefgğhıijklmnoöprsştuüvyz\u00E2\u00EE\u00FB\u00F4'
 ucase_table = u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ\u00C2\u00CE\u00DB\u00D4'
 convert_accent_table = {ord(f_c): t_c for f_c, t_c in zip(u'\u00E2\u00EE\u00FB\u00F4', u'eiüö')}
-low_translate_table = {ord(f_c): t_c for f_c, t_c in zip(ucase_table,lcase_table)}
+low_translate_table = {ord(f_c): t_c for f_c, t_c in zip(ucase_table, lcase_table)}
+
 
 def turkishLower(data):
     return data.translate(low_translate_table)
+
 
 def turkishSanitize(data):
     lowered = turkishLower(data)
