@@ -161,8 +161,9 @@ class SufFixer:
         f_vowel_sfx = next(letter for letter in suffix if letter in self.vowels)
         # first we check for frontness ('e' follow 'eiüö')
         # then we check for roundness because for example 'ü' can't follow 'i'
-        return (((l_vowel_name in self.f_vowels) or is_f_vowel) == (f_vowel_sfx in self.f_vowels)
-                and ((l_vowel_name in self.r_vowels) == (f_vowel_sfx in self.r_vowels)))
+        frontness = ((l_vowel_name in self.f_vowels) or is_f_vowel) == (f_vowel_sfx in self.f_vowels)
+        roundness = (l_vowel_name in self.r_vowels) == (f_vowel_sfx in self.r_vowels)
+        return (frontness and (roundness or (f_vowel_sfx not in self.H)))  # for e.g. karayolları
 
     def _surfacetolex(self, suffix):
         """Turns given suffix to lex form"""
