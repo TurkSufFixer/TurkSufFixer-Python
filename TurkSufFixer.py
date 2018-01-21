@@ -61,6 +61,7 @@ class SufFixer:
         self.updated = set()
         self.possfile = io.open(poss, "r+", encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
+        self.time_pattern = re.compile(r"([0-9][0-9])[.:]00")
         pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
         try:
             with io.open(dictpath, "r", encoding='utf-8') as dictfile,  \
@@ -89,12 +90,12 @@ class SufFixer:
                 1993    -> üç
                 bordo61 -> bir
         """
-        time1 = number.rfind(":")
-        time2 = number.rfind(".")
-        time = time1 if time1 != -1 else time2
-        if time != -1 and len(number) == 5 and number[time + 1:] == "00":
-            number = number[:time]
-        for i, letter in [(i, letter) for i, letter in enumerate(reversed(number))
+
+        time_match = self.time_pattern.match(number)
+        if time_match:
+            number = time_match.groups()[0]
+
+        for i, letter in [(i, letter) for i, letter in enumerate(number[::-1])
                           if letter != u'0' and letter.isnumeric()]:
             if i < 2:
                 return self.numbers[i][letter]
@@ -114,8 +115,8 @@ class SufFixer:
             realword = self._checkEllipsisAffix(name, realsuffix)
             if realword:
                 yield [realword]
-        for i in range(
-                2, len(name) - 1):  # ikiden başlıyoruz çünkü tek harfli kelime yok varsayıyoruz
+        # ikiden başlıyoruz çünkü tek harfli kelime yok varsayıyoruz
+        for i in range(2, len(name) - 1):  
             firstWord = name[:i]
             secondWord = name[i:]
             if firstWord in self.dictionary:
