@@ -10,6 +10,8 @@ EXCEPT_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/istisnalar.txt")
 HAPL_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/unludusmesi.txt")
 POSS_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/iyelik.txt")
 OTHR_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/digerleri.txt")
+
+
 class SufFixer:
     vowels = u'aıuoeiüö'
     backvowels = vowels[:4]
@@ -62,6 +64,9 @@ class SufFixer:
         self.possfile = io.open(poss, "r+", encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
         self.time_pattern = re.compile(r"([0-9][0-9])[.:]00")
+        self.srf_to_lex_translate_table = {ord('a'): u'A', ord('e'): u'A',
+                                           ord(u'ı'): u'H', ord(u'i'): u'H',
+                                           ord(u'u'): u'H', ord(u'ü'): u'H'}
         pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
         try:
             with io.open(dictpath, "r", encoding='utf-8') as dictfile,  \
@@ -116,7 +121,7 @@ class SufFixer:
             if realword:
                 yield [realword]
         # ikiden başlıyoruz çünkü tek harfli kelime yok varsayıyoruz
-        for i in range(2, len(name) - 1):  
+        for i in range(2, len(name) - 1):
             firstWord = name[:i]
             secondWord = name[i:]
             if firstWord in self.dictionary:
@@ -155,11 +160,7 @@ class SufFixer:
 
     def _surfacetolex(self, suffix):
         """Turns given suffix to lex form"""
-        translate_table = [('ae', 'A'), (u'ıiuü', 'H')]
-        for surface, lex in translate_table:
-            for letter in surface:
-                suffix = suffix.replace(letter, lex)
-        return suffix
+        return suffix.translate(self.srf_to_lex_translate_table)
 
     def _checkCompoundNoun(self, name):
         """Checks if given name is a compound noun or not"""
