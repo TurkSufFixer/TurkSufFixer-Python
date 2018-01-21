@@ -79,7 +79,7 @@ class SufFixer:
                                       ) | self.exceptions | self.haplology
                 self.others = {}
                 for line in otherfile:
-                    l = turkishLower(line.strip())
+                    l = turkishSanitize(line.strip())
                     ret = pattern.search(l)
                     if ret is None:
                         self.others[l] = l + ('a' if l.endswith('k') else 'e')
@@ -222,7 +222,7 @@ class SufFixer:
         soft = False
         split = name.split(' ')
         wordNumber = len(split)
-        name = turkishLower(split[-1])
+        name = turkishSanitize(split[-1])
         # TODO: least recently use functool decoratorünü kullan python 3.5 e geçince
         # if the raw suffix doesn't start with 'l' letter which means
         # the suffix is not plural or instrumental. So we can add 'n' buffer letter if appropiate
@@ -307,38 +307,17 @@ class NotValidString(Exception):
 class DictionaryNotFound(Exception):
     pass
 
-
-# Do not use this table in your application.
-# This table made for library usage
-# Letters with circumflex will fail if you use this table
-# All letters with circumflex (şapkalı) will translated to correspondence front vowels
-
-lcase_table = u'abcçdefgğhıijklmnoöprsştuüvyz' + u'eeiiüüöö\xC2\xE2\xDB\xFB\xD4\xF4'
-ucase_table = u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ' + u'\xC2\xE2\xCE\xEE\xDB\xFB\xD4\xF4EEÜÜÖÖ'
-
+lcase_table = u'abcçdefgğhıijklmnoöprsştuüvyz\u00E2\u00EE\u00FB\u00F4'
+ucase_table = u'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ\u00C2\u00CE\u00DB\u00D4'
+convert_accent_table = {ord(f_c): t_c for f_c, t_c in zip(u'\u00E2\u00EE\u00FB\u00F4', u'eiüö')}
+low_translate_table = {ord(f_c): t_c for f_c, t_c in zip(ucase_table,lcase_table)}
 
 def turkishLower(data):
-    return ''.join(map(_turkishtolower, data))
+    return data.translate(low_translate_table)
 
-
-def turkishUpper(data):
-    return ''.join(map(_turkishtoupper, data))
-
-
-def _turkishtolower(char):
-    try:
-        i = ucase_table.index(char)
-        return lcase_table[i]
-    except BaseException:
-        return char
-
-
-def _turkishtoupper(char):
-    try:
-        i = lcase_table.index(char)
-        return ucase_table[i]
-    except BaseException:
-        return char
+def turkishSanitize(data):
+    lowered = turkishLower(data)
+    return lowered.translate(convert_accent_table)
 
 
 if __name__ == '__main__':
