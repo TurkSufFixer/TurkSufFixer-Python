@@ -1,18 +1,9 @@
 # -*- coding: UTF-8 -*-
 import io
 import re
-class Suffixes:
-    ACC = "H"
-    DAT = "A"
-    LOC = "DA"
-    ABL = "DAn"
-    INS = "lA"
-    PLU = "lAr"
-    GEN = "Hn"
+from collections import namedtuple
 
 class SufFixer:
-    suffixes = [Suffixes.ACC,Suffixes.DAT,Suffixes.LOC,Suffixes.ABL,
-                Suffixes.INS,Suffixes.PLU,Suffixes.GEN]
     vowels = u'aıuoeiüö'
     backvowels = vowels[:4]
     frontvowels = vowels[4:]
@@ -31,6 +22,8 @@ class SufFixer:
     superscript = {u'\xB2':u"kare",u'\xB3':u"küp"}
     def __init__(self, dictpath="sozluk/kelimeler.txt", exceptions="sozluk/istisnalar.txt",
                  haplopath="sozluk/unludusmesi.txt", poss="sozluk/iyelik.txt", othpath = "sozluk/digerleri.txt"):
+        Suffixes = namedtuple('Suffixes', ['ACC', 'DAT', 'LOC', 'ABL', 'INS', 'PLU', 'GEN'])
+        self.suffixes = Suffixes(ACC='H', DAT='A', LOC='DA', ABL='DAn', INS='lA', PLU='lAr', GEN='Hn')         
         self.updated = set()
         self.possfile   = io.open(poss, "r+" , encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
@@ -141,19 +134,19 @@ class SufFixer:
         return any(word[-1] in self.exceptions for word in self._divideWord(name,"")
                                                if  word[-1])
     def makeAccusative(self, name, apostrophe=True):
-        return self.constructName(name,Suffixes.ACC,apostrophe)
+        return self.constructName(name,self.suffixes.ACC,apostrophe)
     def makeDative(self, name, apostrophe=True):
-        return self.constructName(name,Suffixes.DAT,apostrophe)
+        return self.constructName(name,self.suffixes.DAT,apostrophe)
     def makeLocative(self, name, apostrophe=True):
-        return self.constructName(name,Suffixes.LOC,apostrophe)
+        return self.constructName(name,self.suffixes.LOC,apostrophe)
     def makeAblative(self, name, apostrophe=True):
-        return self.constructName(name,Suffixes.ABL,apostrophe)
+        return self.constructName(name,self.suffixes.ABL,apostrophe)
     def makeGenitive(self, name, apostrophe=True):
-        return self.constructName(name,Suffixes.GEN,apostrophe)
+        return self.constructName(name,self.suffixes.GEN,apostrophe)
     def makeInstrumental(self, name, apostrophe=True):
-        return self.constructName(name,Suffixes.INS,apostrophe)
+        return self.constructName(name,self.suffixes.INS,apostrophe)
     def makePlural(self, name, apostrophe=True):
-        return self.constructName(name,Suffixes.PLU,apostrophe)
+        return self.constructName(name,self.suffixes.PLU,apostrophe)
     def constructName(self, name, suffix, apostrophe=True):
         return u"{name}{aps}{suffix}".format(name=name.strip(),aps= "'" if apostrophe else "", suffix=self.getSuffix(name,suffix))
     def getSuffix(self, name, suffix):
@@ -213,8 +206,8 @@ class SufFixer:
         # for instrumental case, it will add "y" if name ends with vowel
         # for genitive case, "n" will be added
         if name[-1] in self.vowels:
-            if (suffix[0] in self.vowels) or (rawsuffix == Suffixes.INS):
-                suffix = u"{buf}{suf}".format(suf=suffix, buf = 'y' if rawsuffix != Suffixes.GEN else 'n')
+            if (suffix[0] in self.vowels) or (rawsuffix == self.suffixes.INS):
+                suffix = u"{buf}{suf}".format(suf=suffix, buf = 'y' if rawsuffix != self.suffixes.GEN else 'n')
 
         return suffix
 
