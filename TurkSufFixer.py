@@ -64,7 +64,7 @@ class SufFixer:
         self.updated = set()
         self.possfile = io.open(poss, "r+", encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
-        self.time_pattern = re.compile(r"([0-9][0-9])[.:]00")
+        self.time_pattern = re.compile(r"([01]?[0-9]|2[0-3])[.:]00")
         self.srf_to_lex_translate_table = {ord('a'): u'A', ord('e'): u'A',
                                            ord(u'ı'): u'H', ord(u'i'): u'H',
                                            ord(u'u'): u'H', ord(u'ü'): u'H'}
