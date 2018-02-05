@@ -337,7 +337,7 @@ if __name__ == '__main__':
                                      description="If you don't give any parameter, the program prints all noun cases.")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("word", nargs='?', help="Input word")
-    group.add_argument('infile', nargs='?', type=argparse.FileType(
+    group.add_argument('input_file', nargs='?', type=argparse.FileType(
         'r'), default=sys.stdin, help="Default is the standart input")
     parser.add_argument("-a", "--acc", action="store_true", help="Print Accusative Case")
     parser.add_argument("-d", "--dat", action="store_true", help="Print Dative Case")
@@ -357,7 +357,7 @@ if __name__ == '__main__':
     sfx = SufFixer()
     cmd_suffix = zip(parse_list, sfx.suffixes)
     noapostrophe = args.noapostrophe
-    lines = args.infile.readlines() if args.word is None else [args.word]
+    lines = args.input_file.readlines() if args.word is None else [args.word]
     for line in lines:
         name = line.decode("utf8").strip()
         for cond, suff in [(cond, suff) for cond, suff in cmd_suffix if cond]:
