@@ -9,16 +9,28 @@ We support *"Accusative" (-i hali), "Dative" (-e hali), "Locative" (-de hali), "
 
 ## Some Problematic Examples
 ![examples](http://i.hizliresim.com/D3WOk3.png)
-## Example Usage
+## Example Usages
 
 ```py
 #-*- coding: UTF-8 -*-
-from TurkSufFixer import SufFixer as sf
+from TurkSufFixer import SufFixer
 city = raw_input("Bir şehir girin (Type a city): ").decode('utf-8')
-sfxr = sf() #create the object
-print sfxr.makeDative(city) + " gidiyorum."
-print sfxr.makeAblative(city, apostrophe = False) + " geliyorum."
+sfx = SufFixer() #create the object
+print sfx.makeDative(city) + " gidiyorum."
+print sfx.makeAblative(city, apostrophe=False) + " geliyorum."
 ```
+Or you can write the same code as follows:
+
+```py
+#-*- coding: UTF-8 -*-
+from TurkSufFixer import SufFixer
+city = raw_input("Bir şehir girin (Type a city): ").decode('utf-8')
+sfx = SufFixer() #create the object
+print "{city:'DAT} gidiyorum.".format(city=sfx(city))
+print "{city:ABL} geliyorum.".format(city=sfx(city))
+```
+You can see *Formatting* section for further reference.
+
 ![Some Examples](http://i.hizliresim.com/lEWrzl.png)
 ![More Examples](http://i.hizliresim.com/RQ2z1o.png)
 ## Dependencies
@@ -52,6 +64,7 @@ excluded)*
 \*(Only problematic if the noun is in possessive form)
 
 ## Functions
+
 One key note is that you should pass *name* variable as **UNICODE** type. Also, *Apostrophe* variable is a boolean variable to determine whether there will be apostrophe between word and suffix.
 
  - **makeAccusative(name,apostrophe)**
@@ -64,11 +77,52 @@ One key note is that you should pass *name* variable as **UNICODE** type. Also, 
 
 There is one more function: **getSuffix**. We do not recommend to use this function in your code. However, in case you need the surface form (processed final form) the suffix only, you can use this function (check for *constructName* function for sample usage).
 
+## Formatting
+
+Using string formatting to generate Turkish suffix has the same functionality (even more) calling member function we introduced earlier. For example (assuming *sfx* is an instance of *SufFixer*); `"{:'DAT}".format(sfx(u'Türkçe'))` is exactly same as `sfx.makeDative(u'Türkçe')`. Let's have a closer look to its syntax.
+
+> text_format ::= "{" [field_name] ":" [extra_chars] "suffix_name}"
+
+> field_name ::= argument_name
+
+> extra_chars ::= any character you want to place between name and suffix
+
+> suffix_name ::= "ACC" | "DAT" | "LOC" | "ABL" | "GEN" | "INS" | "PLU"
+
+
+In short, you can use the first three letters of cases for formatting. Also you need to call the SufFixer instance with name which you will create suffix for. Let's give more examples to make it concrete.
+
+```py
+    >>> from TurkSufFixer import SufFixer
+    >>> sfx = SufFixer()
+    >>> name = u'Ahmet'
+    >>> "{:ACC} biliyor.".format(sfx(name))
+    'Ahmeti biliyor.'
+    >>> "{:DAT} gidiyor.".format(sfx(name))
+    'Ahmete gidiyor.'
+    >>> "{:'DAT} gidiyor.".format(sfx(name))
+    "Ahmet'e gidiyor."
+    >>> "{person:'DAT} gidiyor.".format(person=sfx(name))
+    "Ahmet'e gidiyor."
+    >>> "{person:'DAT} gidiyor.".format(person=name)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    ValueError: Invalid conversion specification
+    >>> "{person:DAL} gidiyor.".format(person=sfx(name))
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "TurkSufFixer.py", line 99, in __format__
+        sfx = self.getSuffix(name, suffix)
+      File "TurkSufFixer.py", line 241, in getSuffix
+        raise NotInSuffixes
+    TurkSufFixer.NotInSuffixes
+```
+
 ## Test
 
 To run test (in main directory):
 
-> python -m tests/test
+> $ python -m tests/test
 
 You can add *-v* parameter for more verbose output. Additionally, you can add more test cases to testing operation by simply editing txt files in the *tests* folder.
 
