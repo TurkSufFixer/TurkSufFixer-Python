@@ -33,6 +33,7 @@ You can see *Formatting* section for further reference.
 
 ![Some Examples](http://i.hizliresim.com/lEWrzl.png)
 ![More Examples](http://i.hizliresim.com/RQ2z1o.png)
+
 ## Dependencies
 There is no external dependencies.
 
@@ -79,7 +80,7 @@ There is one more function: **getSuffix**. We do not recommend to use this funct
 
 ## Formatting
 
-Using string formatting to generate Turkish suffix has the same functionality (even more) calling member function we introduced earlier. For example (assuming *sfx* is an instance of *SufFixer*); `"{:'DAT}".format(sfx(u'Türkçe'))` is exactly same as `sfx.makeDative(u'Türkçe')`. Let's have a closer look to its syntax.
+Using string formatting to generate Turkish suffix has the same functionality (even more) as calling member function we introduced previous section. For example (assuming *sfx* is an instance of *SufFixer*); `"{:'DAT}".format(sfx(u'Türkçe'))` is exactly same as `sfx.makeDative(u'Türkçe')`. Let's have a closer look to its syntax.
 
 > text_format ::= "{" [field_name] ":" [extra_chars] "suffix_name}"
 
@@ -93,29 +94,29 @@ Using string formatting to generate Turkish suffix has the same functionality (e
 In short, you can use the first three letters of cases for formatting. Also you need to call the SufFixer instance with name which you will create suffix for. Let's give more examples to make it concrete.
 
 ```py
-    >>> from TurkSufFixer import SufFixer
-    >>> sfx = SufFixer()
-    >>> name = u'Ahmet'
-    >>> "{:ACC} biliyor.".format(sfx(name))
-    'Ahmeti biliyor.'
-    >>> "{:DAT} gidiyor.".format(sfx(name))
-    'Ahmete gidiyor.'
-    >>> "{:'DAT} gidiyor.".format(sfx(name))
-    "Ahmet'e gidiyor."
-    >>> "{person:'DAT} gidiyor.".format(person=sfx(name))
-    "Ahmet'e gidiyor."
-    >>> "{person:'DAT} gidiyor.".format(person=name)
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-    ValueError: Invalid conversion specification
-    >>> "{person:DAL} gidiyor.".format(person=sfx(name))
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "TurkSufFixer.py", line 99, in __format__
-        sfx = self.getSuffix(name, suffix)
-      File "TurkSufFixer.py", line 241, in getSuffix
-        raise NotInSuffixes
-    TurkSufFixer.NotInSuffixes
+>>> from TurkSufFixer import SufFixer
+>>> sfx = SufFixer()
+>>> name = u'Ahmet'
+>>> "{:ACC} biliyor.".format(sfx(name))
+'Ahmeti biliyor.'
+>>> "{:DAT} gidiyor.".format(sfx(name))
+'Ahmete gidiyor.'
+>>> "{:'DAT} gidiyor.".format(sfx(name))
+"Ahmet'e gidiyor."
+>>> "{person:'DAT} gidiyor.".format(person=sfx(name))
+"Ahmet'e gidiyor."
+>>> "{person:'DAT} gidiyor.".format(person=name)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: Invalid conversion specification
+>>> "{person:DAL} gidiyor.".format(person=sfx(name))
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "TurkSufFixer.py", line 99, in __format__
+    sfx = self.getSuffix(name, suffix)
+  File "TurkSufFixer.py", line 241, in getSuffix
+    raise NotInSuffixes
+TurkSufFixer.NotInSuffixes
 ```
 
 ## Test
