@@ -61,6 +61,7 @@ class SufFixer:
             PLU='lAr',
             GEN='Hn')
         self.s_h_pairs = [(u'ğ', u'k'), (u'g', u'k'), (u'b', u'p'), (u'c', u'ç'), (u'd', u't')]
+        self._name = None
         self.updated = set()
         self.possfile = io.open(poss, "r+", encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
@@ -88,6 +89,19 @@ class SufFixer:
                         self.others[ret.group('abbr')] = ret.group('eqv')
         except IOError:
             raise DictionaryNotFound
+    
+    def __format__(self, format_spec):
+        name = self._name
+        self._name = None
+        extra_chars = format_spec[:-3]
+        sfx_name = format_spec[-3:].upper()
+        suffix = getattr(self.suffixes, sfx_name, None)
+        sfx = self.getSuffix(name, suffix)
+        return u"%s%s%s" % (name, extra_chars, sfx)
+    
+    def __call__(self, name):
+        self._name = name
+        return self
 
     def _readNumber(self, number):
         """Reads number and returns last word of it
