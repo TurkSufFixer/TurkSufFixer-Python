@@ -1,4 +1,4 @@
-![headline](http://i.hizliresim.com/lEbkol.png)
+![headline](https://i.imgur.com/eosK7Mv.png)
 
 _Turk**Suf**Fixer_ is a Python (v2.7) library for creating Turkish dynamic messages. Turkish language has a very complex derivational and inflectional morphology. Thus, it is hard to generate dynamic messages like "location + DA" because "DA" (Locative suffix) can be "de", "te", "ta", "nde" or "nda"  with respect to vowels and consonants in the noun (vowel harmony rule). This library handles these problems:
 
@@ -8,19 +8,19 @@ _Turk**Suf**Fixer_ is a Python (v2.7) library for creating Turkish dynamic messa
 We support *"Accusative" (-i hali), "Dative" (-e hali), "Locative" (-de hali), "Ablative" (-den hali) and "Genitive" (-in)* cases. Since no morphological analysis is done, sometimes it is not possible to find correct form of suffix. Although it is rare to encounter this condition, we mentioned what it is in the scope of library and what not in further sections.  
 
 ## Some Problematic Examples
-![examples](http://i.hizliresim.com/D3WOk3.png)
+![examples](https://i.imgur.com/LkbAvkI.png)
 ## Example Usage
 
 ```py
 #-*- coding: UTF-8 -*-
-from turksuffixer import suffixer as sf
+from turksuffixer import Suffixer as sf
 city = raw_input("Bir şehir girin (Type a city): ").decode('utf-8')
 sfxr = sf() #create the object
 print sfxr.makeDative(city) + " gidiyorum."
-print sfxr.makeAblative(city, apostrophe = False) + " geliyorum."
+print sfxr.makeAblative(city, apostrophe=False) + " geliyorum."
 ```
-![Some Examples](http://i.hizliresim.com/lEWrzl.png)
-![More Examples](http://i.hizliresim.com/RQ2z1o.png)
+![Some Examples](https://i.imgur.com/3PCsH4x.png)
+![More Examples](https://i.imgur.com/HoX904A.png)
 ## Dependencies
 There is no external dependencies.
 
@@ -40,14 +40,12 @@ Followings are covered:
 
 Followings are **not** covered:
 
- - Nouns with “cik”, “lik” “ci” suffixes (Words that already in dictionary is
-excluded)*
+ - Nouns with “cik”, “lik” “ci” suffixes (Words that already in dictionary is excluded)*
  - Nouns that already in accusative, dative, locative or ablative case (because no morphological analysis)
  - Nouns that end with punctuation mark (This causes undefined behavior)
  - Compound nouns that are formed with 3 words*
  - Nouns that contains “ki” suffix
- - Nouns that ends with consonant which repeat itself before certain
-   suffixes (i.e. şık+ı -> şıkkı)
+ - Nouns that ends with consonant which repeat itself before certainsuffixes (i.e. şık+ı -> şıkkı)
 
 \*(Only problematic if the noun is in possessive form)
 

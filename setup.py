@@ -7,9 +7,10 @@ with open('README.md') as readme_file:
 
 setup(
     name='turksuffixer',
-    version='1.0',
+    version='0.2.2',
     description='Suffix generator for Turkish language',
     long_description=readme,
+    long_description_content_type='text/markdown',
     url='https://github.com/TurkSufFixer/TurkSufFixer-Python',
     author='Talha Çolakoğlu',
     author_email='talhacolakoglu@gmail.com',
