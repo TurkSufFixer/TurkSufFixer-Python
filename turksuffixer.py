@@ -357,7 +357,7 @@ if __name__ == '__main__':
     parse_list = [args.acc, args.dat, args.loc, args.abl, args.ins, args.plu, args.gen]
     if not any(parse_list):
         parse_list = [True for _, _ in enumerate(parse_list)]
-    sfx = SufFixer()
+    sfx = Suffixer()
     cmd_suffix = zip(parse_list, sfx.suffixes)
     noapostrophe = args.noapostrophe
     lines = args.input_file.readlines() if args.word is None else [args.word]
