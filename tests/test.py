@@ -2,7 +2,7 @@
 import unittest
 import re
 import io
-from TurkSufFixer import SufFixer as Suffix
+from turksuffixer import Suffixer as Suffix
 
 class ValueTest(unittest.TestCase):
     def setUp(self):
