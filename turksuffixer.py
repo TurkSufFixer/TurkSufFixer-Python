@@ -298,20 +298,23 @@ class Suffixer:
                 self.possfile.write(news + "\n")
         self.possfile.close()
 
-
-class NotInSuffixes(Exception):
+class TurkSuffixerException(Exception):
     pass
 
 
-class NotUnicode(Exception):
+class NotInSuffixes(TurkSuffixerException):
     pass
 
 
-class NotValidString(Exception):
+class NotUnicode(TurkSuffixerException):
     pass
 
 
-class DictionaryNotFound(Exception):
+class NotValidString(TurkSuffixerException):
+    pass
+
+
+class DictionaryNotFound(TurkSuffixerException):
     pass
 
 
