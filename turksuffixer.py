@@ -12,7 +12,7 @@ POSS_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/iyelik.txt")
 OTHR_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/digerleri.txt")
 
 
-class SufFixer:
+class Suffixer:
     vowels = u'aıuoeiüö'
     b_vowels = vowels[:4]
     f_vowels = vowels[4:]
