@@ -2,6 +2,7 @@
 import unittest
 import re
 import io
+from pkg_resources import resource_string
 from turksuffixer import Suffixer as Suffix
 
 class ValueTest(unittest.TestCase):
@@ -19,7 +20,7 @@ class ValueTest(unittest.TestCase):
                      ('possesive', self.possesive),
                      ('others',    self.others)
                      ]
-        self.possessive_content = file("sozluk/iyelik.txt").read()
+        self.possessive_content = resource_string("turksuffixer", "sozluk/iyelik.txt").decode("utf8")
         for filename,namelist in test_list:
             with io.open('tests/' + filename,'r',encoding='utf8') as infile:
                 for line in [x for x in infile if not x.strip().startswith('#')]:
