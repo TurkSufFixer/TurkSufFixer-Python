@@ -3,13 +3,14 @@ import io
 import re
 import os
 from collections import namedtuple
+from pkg_resources import resource_string, resource_stream
 
 MODULE_ABS_PATH = os.path.dirname(os.path.abspath(__file__))
-WORDS_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/kelimeler.txt")
-EXCEPT_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/istisnalar.txt")
-HAPL_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/unludusmesi.txt")
-POSS_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/iyelik.txt")
-OTHR_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk/digerleri.txt")
+POSS_DICT_PATH = os.path.join(MODULE_ABS_PATH, "sozluk", "iyelik.txt")
+WORDS_FILE = "sozluk/kelimeler.txt"
+EXCEPT_FILE = "sozluk/istisnalar.txt"
+HAPL_FILE = "sozluk/unludusmesi.txt"
+OTHER_FILE = "sozluk/digerleri.txt"
 
 
 class Suffixer:
@@ -49,8 +50,7 @@ class Suffixer:
     numbers = [ones, tens, digits]
     superscript = {u'\xB2': u"kare", u'\xB3': u"küp"}
 
-    def __init__(self, dictpath=WORDS_DICT_PATH, exceptions=EXCEPT_DICT_PATH,
-                 haplopath=HAPL_DICT_PATH, poss=POSS_DICT_PATH, othpath=OTHR_DICT_PATH):
+    def __init__(self):
         Suffixes = namedtuple('Suffixes', ['ACC', 'DAT', 'LOC', 'ABL', 'INS', 'PLU', 'GEN'])
         self.suffixes = Suffixes(
             ACC='H',
@@ -62,24 +62,23 @@ class Suffixer:
             GEN='Hn')
         self.s_h_pairs = [(u'ğ', u'k'), (u'g', u'k'), (u'b', u'p'), (u'c', u'ç'), (u'd', u't')]
         self.updated = set()
-        self.possfile = io.open(poss, "r+", encoding='utf-8')
+        self.possfile = io.open(POSS_DICT_PATH, "r+", encoding='utf-8')
         self.possessive = set(self.possfile.read().splitlines())
         self.time_pattern = re.compile(r"([01]?[0-9]|2[0-3])[.:]00")
         self.srf_to_lex_translate_table = {ord('a'): u'A', ord('e'): u'A',
                                            ord(u'ı'): u'H', ord(u'i'): u'H',
                                            ord(u'u'): u'H', ord(u'ü'): u'H'}
+        
+        words = resource_string(__name__, WORDS_FILE).decode("utf8").split()
+        self.exceptions = set(resource_string(__name__, EXCEPT_FILE).decode("utf8").split())
+        self.haplology = set(resource_string(__name__, HAPL_FILE).decode("utf8").split())
+        self.dictionary = set(words) | self.exceptions | self.haplology
         pattern = re.compile(r"(?P<abbr>\w+) +-> +(?P<eqv>\w+)", re.UNICODE)
         try:
-            with io.open(dictpath, "r", encoding='utf-8') as dictfile,  \
-                    io.open(exceptions, "r", encoding='utf-8') as exceptfile, \
-                    io.open(haplopath, "r", encoding='utf-8') as haplofile,   \
-                    io.open(othpath, "r", encoding="utf-8") as otherfile:
-                self.exceptions = set(exceptfile.read().splitlines())
-                self.haplology = set(haplofile.read().splitlines())
-                self.dictionary = set(dictfile.read().splitlines()
-                                      ) | self.exceptions | self.haplology
+            with resource_stream(__name__, OTHER_FILE) as otherfile:
                 self.others = {}
                 for line in otherfile:
+                    line = line.decode("utf8")
                     l = turkishSanitize(line.strip())
                     ret = pattern.search(l)
                     if ret is None:
