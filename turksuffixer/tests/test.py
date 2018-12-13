@@ -20,7 +20,7 @@ class ValueTest(unittest.TestCase):
                      ('possesive', self.possesive),
                      ('others',    self.others)
                      ]
-        self.possessive_content = resource_string("turksuffixer", "sozluk/iyelik.txt").decode("utf8")
+        self.possessive_content = resource_string("turksuffixer", "sozluk/iyelik.txt")
         for filename,namelist in test_list:
             with io.open('tests/' + filename,'r',encoding='utf8') as infile:
                 for line in [x for x in infile if not x.strip().startswith('#')]:
@@ -50,5 +50,7 @@ class ValueTest(unittest.TestCase):
                 self.assertEqual(correctsf.strip(), rt, u"'{}' için '{}' dönmesi gerekirken '{}' döndü.".format(name,correctsf,rt).encode('utf8'))
     def tearDown(self):
         file("sozluk/iyelik.txt","w").write(self.possessive_content);
+        
+        
 if __name__ == '__main__':
     unittest.main()
